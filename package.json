@@ -4,11 +4,15 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:root": "turbo run dev --filter=root",
+    "dev:dashboard": "turbo run dev --filter=dashboard",
+    "dev:microfrontends": "concurrently \"npm run dev:root\" \"npm run dev:dashboard\"",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
+    "concurrently": "^9.0.1",
     "prettier": "^3.6.2",
     "turbo": "^2.5.5",
     "typescript": "5.8.3"

@@ -1,27 +1,47 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Card } from "@repo/ui";
 
 export default function Home() {
   return (
-    <div className="min-h-screen p-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Navigation Header */}
+      <nav className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd"/>
+                </svg>
+                <span className="font-medium">Voltar ao Menu Principal</span>
+              </Link>
+            </div>
+            <div className="flex items-center">
+              <h1 className="text-xl font-semibold text-gray-900">Dashboard - Microfrontend</h1>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div className="max-w-7xl mx-auto p-8">
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
-          <p className="text-gray-600">Testando o componente Card compartilhado</p>
+          <p className="text-gray-600">Microfrontend independente com componentes compartilhados</p>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Card básico */}
           <Card>
             <h3 className="text-lg font-semibold mb-2">Card Básico</h3>
-            <p className="text-gray-600">Este é um card simples sem título.</p>
+            <p className="text-gray-600">Este é um card simples do microfrontend dashboard.</p>
           </Card>
 
           {/* Card com título */}
           <Card title="Card com Título">
             <p className="text-gray-700">Este card possui um título definido na prop.</p>
             <div className="mt-4 flex items-center gap-2">
-              <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Ativo</span>
+              <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Microfrontend</span>
             </div>
           </Card>
 
@@ -64,12 +84,30 @@ export default function Home() {
                 <div className="font-semibold text-green-600">Online</div>
               </div>
               <div>
-                <div className="text-sm text-gray-600">Uptime</div>
-                <div className="font-semibold">99.9%</div>
+                <div className="text-sm text-gray-600">Porta</div>
+                <div className="font-semibold">3001</div>
               </div>
               <div>
-                <div className="text-sm text-gray-600">Última atualização</div>
-                <div className="font-semibold">Hoje</div>
+                <div className="text-sm text-gray-600">Tipo</div>
+                <div className="font-semibold text-purple-600">Microfrontend</div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Card de arquitetura */}
+          <Card title="Multi Zones">
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Root App:</span>
+                <code className="text-xs bg-gray-100 px-2 py-1 rounded">:3000</code>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Dashboard:</span>
+                <code className="text-xs bg-blue-100 px-2 py-1 rounded">:3001</code>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Shared UI:</span>
+                <code className="text-xs bg-green-100 px-2 py-1 rounded">@repo/ui</code>
               </div>
             </div>
           </Card>

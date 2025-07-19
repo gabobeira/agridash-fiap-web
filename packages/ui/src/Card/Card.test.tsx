@@ -33,5 +33,8 @@ describe('Card', () => {
     
     const cardElement = screen.getByText('Custom content').parentElement?.parentElement;
     expect(cardElement?.className).toContain('custom-class');
+    expect(cardElement?.className).toContain('bg-white');
+    expect(cardElement?.className).toContain('rounded-xl');
+    expect(cardElement?.className).toContain('shadow-lg');
   });
 });

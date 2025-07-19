@@ -1,103 +1,127 @@
 import Image from "next/image";
+import Link from "next/link";
+import { Card } from "@repo/ui";
 
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="container mx-auto px-4 py-16">
+        {/* Header */}
+        <header className="text-center mb-16">
+          <div className="flex justify-center mb-6">
             <Image
               className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              src="/next.svg"
+              alt="AgriDash Logo"
+              width={200}
+              height={50}
+              priority
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
+            AgriDash FIAP
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Plataforma de gestão agrícola com arquitetura de microfrontends
+          </p>
+        </header>
+
+        {/* Microfrontends Navigation */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          
+          {/* Dashboard Microfrontend */}
+          <Card>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                </svg>
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-3">Dashboard</h3>
+              <p className="text-gray-600 mb-6">
+                Painel principal com métricas, gráficos e visão geral dos dados agrícolas
+              </p>
+              <Link 
+                href="/dashboard"
+                className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                Acessar Dashboard
+              </Link>
+            </div>
+          </Card>
+
+          {/* Analytics Microfrontend (Futuro) */}
+          <Card>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                </svg>
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-3">Analytics</h3>
+              <p className="text-gray-600 mb-6">
+                Análises avançadas e relatórios detalhados sobre performance
+              </p>
+              <button 
+                disabled
+                className="inline-block bg-gray-300 text-gray-500 px-6 py-3 rounded-lg cursor-not-allowed font-medium"
+              >
+                Em desenvolvimento
+              </button>
+            </div>
+          </Card>
+
+          {/* Settings Microfrontend (Futuro) */}
+          <Card>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd"/>
+                </svg>
+              </div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-3">Configurações</h3>
+              <p className="text-gray-600 mb-6">
+                Gerenciamento de usuários, permissões e configurações do sistema
+              </p>
+              <button 
+                disabled
+                className="inline-block bg-gray-300 text-gray-500 px-6 py-3 rounded-lg cursor-not-allowed font-medium"
+              >
+                Em desenvolvimento
+              </button>
+            </div>
+          </Card>
+
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Architecture Info */}
+        <div className="mt-16 text-center">
+          <Card className="max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Arquitetura Microfrontends</h2>
+            <p className="text-gray-600 mb-6">
+              Esta aplicação utiliza a abordagem Multi Zones do Next.js para implementar uma arquitetura de microfrontends,
+              permitindo desenvolvimento e deploy independente de cada módulo.
+            </p>
+            <div className="grid md:grid-cols-3 gap-6 text-sm">
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-2">Root App</h4>
+                <p className="text-blue-700">Aplicação principal que orquestra os microfrontends</p>
+                <code className="text-xs bg-blue-100 px-2 py-1 rounded mt-2 block">localhost:3000</code>
+              </div>
+              <div className="p-4 bg-green-50 rounded-lg">
+                <h4 className="font-semibold text-green-900 mb-2">Dashboard</h4>
+                <p className="text-green-700">Microfrontend independente com métricas e dados</p>
+                <code className="text-xs bg-green-100 px-2 py-1 rounded mt-2 block">localhost:3001</code>
+              </div>
+              <div className="p-4 bg-purple-50 rounded-lg">
+                <h4 className="font-semibold text-purple-900 mb-2">Shared UI</h4>
+                <p className="text-purple-700">Biblioteca de componentes compartilhados</p>
+                <code className="text-xs bg-purple-100 px-2 py-1 rounded mt-2 block">@repo/ui</code>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
