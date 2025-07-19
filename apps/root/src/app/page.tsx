@@ -19,7 +19,7 @@ export default function Home() {
             />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-            AgriDash FIAP
+            AgriDash FIAP teste
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Plataforma de gestão agrícola com arquitetura de microfrontends
