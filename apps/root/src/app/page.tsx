@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Card } from "@repo/ui";
 
 export default function Home() {
@@ -41,12 +40,22 @@ export default function Home() {
               <p className="text-gray-600 mb-6">
                 Painel principal com métricas, gráficos e visão geral dos dados agrícolas
               </p>
-              <Link 
-                href="/dashboard"
-                className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
-              >
-                Acessar Dashboard
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <a 
+                  href="/dashboard"
+                  className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium text-center"
+                >
+                  Acessar Dashboard
+                </a>
+                <a 
+                  href="http://localhost:3001/dashboard"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors font-medium text-center"
+                >
+                  Dashboard Direto ↗
+                </a>
+              </div>
             </div>
           </Card>
 

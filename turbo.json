@@ -1,21 +1,21 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
-  "globalEnv": ["DASHBOARD_URL"],
+  "globalEnv": ["DASHBOARD_URL", "NODE_ENV", "DASHBOARD_ASSET_PREFIX"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"],
-      "env": ["DASHBOARD_URL"]
+      "env": ["DASHBOARD_URL", "NODE_ENV", "DASHBOARD_ASSET_PREFIX"]
     },
     "lint": {
       "dependsOn": ["^lint"],
-      "env": ["DASHBOARD_URL"]
+      "env": ["DASHBOARD_URL", "NODE_ENV", "DASHBOARD_ASSET_PREFIX"]
     },
     "check-types": {
       "dependsOn": ["^check-types"],
-      "env": ["DASHBOARD_URL"]
+      "env": ["DASHBOARD_URL", "NODE_ENV", "DASHBOARD_ASSET_PREFIX"]
     },
     "test": {
       "dependsOn": ["^test"],
@@ -28,7 +28,7 @@
     "dev": {
       "cache": false,
       "persistent": true,
-      "env": ["DASHBOARD_URL"]
+      "env": ["DASHBOARD_URL", "NODE_ENV", "DASHBOARD_ASSET_PREFIX"]
     }
   }
 }
