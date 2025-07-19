@@ -1,8 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: '/dashboard',
-  assetPrefix: process.env.DASHBOARD_ASSET_PREFIX || undefined,
+  assetPrefix: '/dashboard',
   async headers() {
     return [
       {

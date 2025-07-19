@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/dashboard/:path*",
+      "destination": "https://agridash-fiap-web-dashboard.vercel.app/:path*"
+    }
+  ]
+}
