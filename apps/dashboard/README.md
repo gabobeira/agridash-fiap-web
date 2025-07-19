@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AgriDash FIAP - Dashboard Microfrontend
 
-## Getting Started
+Este é o microfrontend Dashboard do AgriDash FIAP, responsável por exibir métricas, gráficos e dados agrícolas.
 
-First, run the development server:
+## Sobre o Dashboard
+
+O Dashboard é um microfrontend independente que fornece:
+- Painel de métricas agrícolas
+- Gráficos e visualizações de dados
+- Interface de navegação de volta ao app principal
+- Componentes compartilhados do `@repo/ui`
+
+## Desenvolvimento
+
+Para executar apenas o Dashboard:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev:dashboard
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Para executar todos os microfrontends:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run dev:microfrontends
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Configuração
 
-## Learn More
+- **Porto**: 3001
+- **Base Path**: `/dashboard`
+- **Integração**: Conectado ao Root App via rewrites
+- **CORS**: Configurado para permitir integração com outros microfrontends
 
-To learn more about Next.js, take a look at the following resources:
+## Navegação
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Acesso direto**: `http://localhost:3001/dashboard`
+- **Via Root App**: `http://localhost:3000/dashboard`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Build
 
-## Deploy on Vercel
+```bash
+npm run build
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Gera uma build independente que pode ser deployed separadamente.
