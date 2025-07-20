@@ -1,0 +1,18 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": false
+  },
+  "sonarlint.connectedMode.project": {
+    "connectionId": "belezanaweb",
+    "projectKey": "belezanaweb_backoffice-mf-seller-leads"
+  }
+}
