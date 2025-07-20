@@ -64,7 +64,7 @@ npm run dev
 
 ## 🧪 Testes
 
-O projeto usa Jest para apps Next.js e Vitest para componentes UI:
+O projeto usa Jest para todos os testes:
 
 ```bash
 # Executar todos os testes
@@ -106,7 +106,7 @@ npm run check-versions       # Verificar consistência de dependências
 - [ESLint](https://eslint.org/) para linting de código
 - [Prettier](https://prettier.io) para formatação de código
 - [Jest](https://jestjs.io/) para testes de apps Next.js
-- [Vitest](https://vitest.dev/) para testes de componentes UI
+- [Jest](https://jestjs.io/) para todos os testes
 - [Testing Library](https://testing-library.com/) para testes de React
 - [Tailwind CSS](https://tailwindcss.com/) para estilização
 - [Turborepo](https://turborepo.org/) para gerenciamento do monorepo
@@ -127,7 +127,7 @@ agridash-fiap-web/
 ├── packages/
 │   ├── ui/                 # Componentes React compartilhados
 │   │   ├── src/Card/      # Exemplo: componente Card
-│   │   └── vitest.config.ts # Configuração de testes Vitest
+│   │   └── jest.config.js    # Configuração de testes Jest
 │   ├── eslint-config/     # Configurações ESLint compartilhadas
 │   └── typescript-config/ # Configurações TypeScript
 ├── scripts/
