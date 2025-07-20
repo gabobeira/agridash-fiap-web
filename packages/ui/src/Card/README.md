@@ -66,4 +66,4 @@ Execute os testes com:
 npm test
 ```
 
-O componente inclui testes básicos de renderização usando Vitest e Testing Library.
+O componente inclui testes básicos de renderização usando Jest e Testing Library.
