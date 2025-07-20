@@ -1,78 +1,246 @@
-# @repo/tailwind-config
+# @repo/tailwind-config - Configurações Tailwind CSS Compartilhadas
 
-Configuração compartilhada do Tailwind CSS v3.4.17 para o projeto AgriDash.
+Configuração base do Tailwind CSS para todos os apps do monorepo AgriDash, garantindo consistência visual e otimização do bundle.
 
-## Uso
+## 🎨 Configuração
+
+### Uso nos Apps
 
 ```javascript
-import sharedConfig from '@repo/tailwind-config';
+// apps/*/tailwind.config.js
+const sharedConfig = require('@repo/tailwind-config');
 
-/** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   ...sharedConfig,
-  content: ['./src/**/*.{js,ts,jsx,tsx}'],
-  // Sobrescrever ou estender configurações específicas se necessário
-  theme: {
-    ...sharedConfig.theme,
-    extend: {
-      ...sharedConfig.theme.extend,
-      // Configurações específicas do projeto
-    },
-  },
+  content: [
+    './src/**/*.{js,ts,jsx,tsx}',
+    '../../packages/ui/src/**/*.{js,ts,jsx,tsx}', // Inclui componentes da UI lib
+  ],
 };
 ```
 
-## Cores Disponíveis
+## 🎯 Customizações AgriDash
 
-### Brand
-
-- `brand-50` até `brand-950` - Cores principais da marca
-
-### Estados
-
-- `success-50` até `success-950` - Verde para sucesso
-- `warning-50` até `warning-950` - Amarelo para avisos
-- `danger-50` até `danger-950` - Vermelho para erros
-- `neutral-50` até `neutral-950` - Cinzas neutros
-
-## Tipografia
-
-- Fonte padrão: Inter
-- Fonte mono: JetBrains Mono
-
-## Animações
-
-- `animate-fade-in` - Fade in suave
-- `animate-slide-up` - Deslizar para cima
-- `animate-slide-down` - Deslizar para baixo
-
-## Sombras
-
-- `shadow-soft` - Sombra suave
-- `shadow-medium` - Sombra média
-- `shadow-hard` - Sombra intensa
-
-## Configuração do PostCSS
-
-Para usar o Tailwind CSS v3.4.17, certifique-se de que seu `postcss.config.mjs` está configurado assim:
+### Paleta de Cores Agrícola
 
 ```javascript
-const config = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
+colors: {
+  // Cores base mantidas do Tailwind
+  primary: {
+    50: '#eff6ff',
+    500: '#3b82f6',
+    600: '#2563eb',
+    700: '#1d4ed8',
   },
-};
 
-export default config;
+  // Cores específicas para agricultura
+  agri: {
+    green: '#22c55e',     // Plantas saudáveis
+    soil: '#92400e',      // Terra/solo
+    water: '#0ea5e9',     // Irrigação
+    sun: '#f59e0b',       // Sol/energia
+    warning: '#f97316',   // Alertas
+    danger: '#ef4444',    // Problemas críticos
+  }
+}
 ```
 
-## CSS Global
+### Typography Especializada
 
-No seu arquivo `globals.css`, use as diretivas do Tailwind v3:
+```javascript
+fontFamily: {
+  sans: ['Geist', 'Inter', 'system-ui', 'sans-serif'],
+  mono: ['Geist Mono', 'Monaco', 'monospace'],
+  display: ['Geist', 'Inter', 'sans-serif'], // Para títulos
+}
+```
+
+### Spacing Personalizado
+
+```javascript
+spacing: {
+  // Espaçamentos específicos para dashboards
+  'card': '1.5rem',     // 24px - padding padrão de cards
+  'section': '2rem',    // 32px - espaçamento entre seções
+  'page': '3rem',       // 48px - padding de páginas
+}
+```
+
+## 📱 Responsividade AgriDash
+
+### Breakpoints Otimizados
+
+```javascript
+screens: {
+  'xs': '475px',        // Celulares pequenos
+  'sm': '640px',        // Celulares
+  'md': '768px',        // Tablets
+  'lg': '1024px',       // Laptops
+  'xl': '1280px',       // Desktop
+  '2xl': '1536px',      // Monitores grandes
+
+  // Breakpoints específicos para dashboards
+  'dashboard-sm': '900px',  // Layout de dashboard compacto
+  'dashboard-lg': '1200px', // Layout de dashboard expandido
+}
+```
+
+## 🧩 Componentes Utilitários
+
+### Classes Personalizadas
 
 ```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer utilities {
+  .card-shadow {
+    @apply shadow-lg hover:shadow-xl transition-shadow duration-200;
+  }
+
+  .agri-gradient {
+    @apply bg-gradient-to-br from-green-50 to-blue-50;
+  }
+
+  .sensor-normal {
+    @apply bg-green-100 text-green-800 border-green-200;
+  }
+
+  .sensor-warning {
+    @apply bg-yellow-100 text-yellow-800 border-yellow-200;
+  }
+
+  .sensor-critical {
+    @apply bg-red-100 text-red-800 border-red-200;
+  }
+}
 ```
+
+## 🎨 Design Tokens
+
+### Grid System
+
+```javascript
+gridTemplateColumns: {
+  'dashboard': 'repeat(auto-fit, minmax(300px, 1fr))',
+  'sensors': 'repeat(auto-fit, minmax(250px, 1fr))',
+  'metrics': 'repeat(auto-fit, minmax(200px, 1fr))',
+}
+```
+
+### Animations
+
+```javascript
+animation: {
+  'sensor-pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+  'fade-in': 'fadeIn 0.5s ease-in-out',
+  'slide-up': 'slideUp 0.3s ease-out',
+}
+
+keyframes: {
+  fadeIn: {
+    '0%': { opacity: '0', transform: 'translateY(10px)' },
+    '100%': { opacity: '1', transform: 'translateY(0)' }
+  },
+  slideUp: {
+    '0%': { transform: 'translateY(100%)' },
+    '100%': { transform: 'translateY(0)' }
+  }
+}
+```
+
+## 🔧 Otimizações
+
+### Content Purging
+
+```javascript
+content: [
+  "./src/**/*.{js,ts,jsx,tsx}",
+  "../../packages/ui/src/**/*.{js,ts,jsx,tsx}",
+],
+```
+
+### Plugin Configuration
+
+```javascript
+plugins: [
+  require('@tailwindcss/forms'), // Estilização de formulários
+  require('@tailwindcss/typography'), // Tipografia avançada
+  require('@tailwindcss/container-queries'), // Container queries
+];
+```
+
+## 🌱 Classes Específicas AgriDash
+
+### Status de Sensores
+
+```html
+<!-- Sensor normal -->
+<div class="sensor-normal p-4 rounded-lg border">
+  Sensor funcionando normalmente
+</div>
+
+<!-- Sensor com warning -->
+<div class="sensor-warning p-4 rounded-lg border">Atenção necessária</div>
+
+<!-- Sensor crítico -->
+<div class="sensor-critical p-4 rounded-lg border">Intervenção urgente</div>
+```
+
+### Layout de Dashboard
+
+```html
+<!-- Grid responsivo para sensores -->
+<div class="grid grid-cols-sensors gap-6">
+  <!-- Sensor cards aqui -->
+</div>
+
+<!-- Container principal -->
+<div class="agri-gradient min-h-screen p-page">
+  <!-- Conteúdo da aplicação -->
+</div>
+```
+
+## 📊 Performance
+
+### Bundle Size Optimization
+
+- Purge automático de classes não utilizadas
+- Tree shaking de componentes
+- Lazy loading de utilitários pesados
+
+### Build Optimization
+
+```javascript
+module.exports = {
+  // ... outras configurações
+  experimental: {
+    optimizeUniversalDefaults: true,
+  },
+};
+```
+
+## 🎯 Integração com Mantine
+
+### Conflitos Resolvidos
+
+```javascript
+// Desabilita reset do Tailwind para evitar conflitos
+corePlugins: {
+  preflight: false, // Mantine tem seu próprio normalize
+}
+
+// Configuração de importante para override
+important: false, // Permite que Mantine tenha precedência
+```
+
+### Classes Complementares
+
+```css
+/* Tailwind para layout, Mantine para componentes */
+.dashboard-layout {
+  @apply container mx-auto px-4 py-8;
+  /* Mantine components inside inherit properly */
+}
+```
+
+---
+
+**Tailwind CSS otimizado para agricultura e dashboards do AgriDash**
