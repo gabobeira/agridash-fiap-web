@@ -12,8 +12,7 @@
     "check-types": "turbo run check-types",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
-    "validate": "npm run lint && npm run check-types && npm run test && npm run check-versions",
-    "check-versions": "node scripts/check-versions.js"
+    "validate": "npm run lint && npm run check-types && npm run test"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",

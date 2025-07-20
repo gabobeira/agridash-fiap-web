@@ -20,7 +20,7 @@ Cada package/app é 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Pré-requisitos
 
-- Node.js 18+ 
+- Node.js 18+
 - npm 10.8.2+
 
 ### Instalação
@@ -37,14 +37,18 @@ npm install
 ### Executando o Projeto
 
 #### Opção 1: Executar todos os microfrontends (Recomendado)
+
 ```bash
 npm run dev:microfrontends
 ```
+
 Isso inicia simultaneamente:
+
 - Root app: http://localhost:3000
 - Dashboard: http://localhost:3001
 
 #### Opção 2: Executar apps individualmente
+
 ```bash
 # App principal (root)
 npm run dev:root
@@ -95,9 +99,6 @@ npm run lint                  # ESLint em todos os packages
 npm run format               # Formatar código com Prettier
 npm run check-types          # Verificação de tipos TypeScript
 npm run validate             # Lint + tipos + testes + versões
-
-# Utilitários
-npm run check-versions       # Verificar consistência de dependências
 ```
 
 ## 🛠️ Ferramentas Incluídas
@@ -130,8 +131,6 @@ agridash-fiap-web/
 │   │   └── jest.config.js    # Configuração de testes Jest
 │   ├── eslint-config/     # Configurações ESLint compartilhadas
 │   └── typescript-config/ # Configurações TypeScript
-├── scripts/
-│   └── check-versions.js  # Script de validação de dependências
 ├── turbo.json             # Configuração do Turborepo
 └── package.json           # Scripts principais do monorepo
 ```
