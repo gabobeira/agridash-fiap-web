@@ -3,7 +3,7 @@
 import { Card, Text, Group, Stack, ThemeIcon, SimpleGrid } from '@mantine/core';
 import { IconSun, IconCloud, IconDroplet, IconWind } from '@tabler/icons-react';
 
-export interface WeatherData {
+export interface FWeatherData {
   temperature: number;
   humidity: number;
   windSpeed: number;
@@ -23,9 +23,9 @@ const weatherColors = {
   rainy: 'blue',
 };
 
-export default function WeatherWidget({
+export default function FWeatherWidget({
   weather,
-}: Readonly<{ weather: WeatherData }>) {
+}: Readonly<{ weather: FWeatherData }>) {
   const WeatherIcon = weatherIcons[weather.condition];
 
   return (

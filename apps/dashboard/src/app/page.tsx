@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Card, Input, Button } from '@repo/ui';
+import { FCard, FInput, FButton } from '@repo/ui';
 import DashboardExample from '../components/DashboardExample';
 
 export default function Home() {
@@ -48,15 +48,15 @@ export default function Home() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Card básico */}
-          <Card>
+          <FCard>
             <h3 className="text-lg font-semibold mb-2">Card Básico</h3>
             <p className="text-gray-600">
               Este é um card simples do microfrontend dashboard.
             </p>
-          </Card>
+          </FCard>
 
           {/* Card com título */}
-          <Card title="Card com Título">
+          <FCard title="Card com Título">
             <p className="text-gray-700">
               Este card possui um título definido na prop.
             </p>
@@ -65,17 +65,17 @@ export default function Home() {
                 Microfrontend
               </span>
             </div>
-          </Card>
+          </FCard>
 
           {/* Card de estatística */}
-          <Card title="Usuários Ativos" className="text-center">
+          <FCard title="Usuários Ativos" className="text-center">
             <div className="text-3xl font-bold text-blue-600 mb-2">1,234</div>
             <p className="text-gray-600">Total de usuários online</p>
             <div className="mt-3 text-sm text-green-600">↗️ +12% este mês</div>
-          </Card>
+          </FCard>
 
           {/* Card com imagem */}
-          <Card title="Produto em Destaque">
+          <FCard title="Produto em Destaque">
             <div className="space-y-3">
               <div className="bg-gray-200 h-32 rounded flex items-center justify-center">
                 <Image src="/next.svg" alt="Produto" width={80} height={20} />
@@ -89,10 +89,10 @@ export default function Home() {
                 </button>
               </div>
             </div>
-          </Card>
+          </FCard>
 
           {/* Card de informações */}
-          <Card title="Sistema" className="lg:col-span-2">
+          <FCard title="Sistema" className="lg:col-span-2">
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <div className="text-sm text-gray-600">Versão</div>
@@ -113,10 +113,10 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </Card>
+          </FCard>
 
           {/* Card de arquitetura */}
-          <Card title="Multi Zones">
+          <FCard title="Multi Zones">
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-sm text-gray-600">Root App:</span>
@@ -137,7 +137,7 @@ export default function Home() {
                 </code>
               </div>
             </div>
-          </Card>
+          </FCard>
         </div>
 
         {/* Seção de Formulário com Mantine UI */}
@@ -146,36 +146,36 @@ export default function Home() {
             Cadastro de Sensor - Mantine UI
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card title="Dados do Sensor">
+            <FCard title="Dados do Sensor">
               <div className="space-y-4">
-                <Input
+                <FInput
                   label="Nome do Sensor"
                   placeholder="Ex: Sensor de Temperatura"
                   description="Identificação única do sensor"
                   withAsterisk
                 />
-                <Input
+                <FInput
                   label="Tipo"
                   placeholder="Ex: Temperatura, Umidade, pH"
                   description="Tipo de medição realizada"
                 />
-                <Input
+                <FInput
                   label="Localização"
                   placeholder="Ex: Setor A - Campo 1"
                   description="Localização física do sensor"
                 />
                 <div className="flex gap-3 pt-4">
-                  <Button variant="filled" color="blue">
+                  <FButton variant="filled" color="blue">
                     Salvar Sensor
-                  </Button>
-                  <Button variant="outline" color="gray">
+                  </FButton>
+                  <FButton variant="outline" color="gray">
                     Cancelar
-                  </Button>
+                  </FButton>
                 </div>
               </div>
-            </Card>
+            </FCard>
 
-            <Card title="Preview dos Componentes">
+            <FCard title="Preview dos Componentes">
               <div className="space-y-4">
                 <p className="text-gray-600 text-sm">
                   Esta seção demonstra a integração dos componentes Mantine UI
@@ -194,7 +194,7 @@ export default function Home() {
                   </ul>
                 </div>
               </div>
-            </Card>
+            </FCard>
           </div>
         </div>
 

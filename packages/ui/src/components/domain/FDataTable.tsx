@@ -3,7 +3,7 @@
 import { Table, Card, Badge, Text, Group, ActionIcon } from '@mantine/core';
 import { IconEye, IconEdit, IconTrash } from '@tabler/icons-react';
 
-export interface DataRow {
+export interface FDataRow {
   id: string;
   sensorName: string;
   type: string;
@@ -13,9 +13,9 @@ export interface DataRow {
   status: 'normal' | 'warning' | 'critical';
 }
 
-export interface DataTableProps {
+export interface FDataTableProps {
   title?: string;
-  data: DataRow[];
+  data: FDataRow[];
   onView?: (id: string) => void;
   onEdit?: (id: string) => void;
   onDelete?: (id: string) => void;
@@ -27,13 +27,13 @@ const statusColors = {
   critical: 'red',
 };
 
-export default function DataTable({
+export default function FDataTable({
   title = 'Dados dos Sensores',
   data,
   onView,
   onEdit,
   onDelete,
-}: Readonly<DataTableProps>) {
+}: Readonly<FDataTableProps>) {
   const rows = data.map(row => (
     <Table.Tr key={row.id}>
       <Table.Td>

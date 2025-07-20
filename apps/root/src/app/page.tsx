@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Card, Input, Button } from '@repo/ui';
+import { FCard, FInput, FButton } from '@repo/ui';
 import { Title, Group } from '@mantine/core';
 
 export default function Home() {
@@ -29,7 +29,7 @@ export default function Home() {
         {/* Microfrontends Navigation */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Dashboard Microfrontend */}
-          <Card>
+          <FCard>
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
@@ -64,10 +64,10 @@ export default function Home() {
                 </a>
               </div>
             </div>
-          </Card>
+          </FCard>
 
           {/* Analytics Microfrontend (Futuro) */}
-          <Card>
+          <FCard>
             <div className="text-center">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
@@ -91,10 +91,10 @@ export default function Home() {
                 Em desenvolvimento
               </button>
             </div>
-          </Card>
+          </FCard>
 
           {/* Settings Microfrontend (Futuro) */}
-          <Card>
+          <FCard>
             <div className="text-center">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg
@@ -122,12 +122,12 @@ export default function Home() {
                 Em desenvolvimento
               </button>
             </div>
-          </Card>
+          </FCard>
         </div>
 
         {/* Architecture Info */}
         <div className="mt-16 text-center">
-          <Card className="max-w-4xl mx-auto">
+          <FCard className="max-w-4xl mx-auto">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
               Arquitetura Microfrontends
             </h2>
@@ -167,12 +167,12 @@ export default function Home() {
                 </code>
               </div>
             </div>
-          </Card>
+          </FCard>
         </div>
 
         {/* Mantine UI Demo Section */}
         <div className="mt-16 max-w-2xl mx-auto">
-          <Card>
+          <FCard>
             <div className="text-center mb-6">
               <Title order={2} mb="md">
                 Mantine UI Demo
@@ -183,24 +183,24 @@ export default function Home() {
               </p>
             </div>
             <div className="space-y-4">
-              <Input
+              <FInput
                 label="Nome do Sensor"
                 placeholder="Digite o nome do sensor"
                 description="Nome identificador para o sensor agrícola"
                 withAsterisk
               />
-              <Input
+              <FInput
                 label="Localização"
                 placeholder="Ex: Setor A - Campo 1"
                 description="Localização física do sensor"
               />
               <Group justify="center" mt="lg">
-                <Button variant="filled" color="blue">
+                <FButton variant="filled" color="blue">
                   Salvar Sensor
-                </Button>
+                </FButton>
               </Group>
             </div>
-          </Card>
+          </FCard>
         </div>
       </div>
     </div>

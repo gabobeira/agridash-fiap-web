@@ -2,8 +2,8 @@
 
 import { TextInput, TextInputProps } from '@mantine/core';
 
-export type InputProps = TextInputProps;
+export type FInputProps = TextInputProps;
 
-export default function Input(props: Readonly<InputProps>) {
+export default function FInput(props: Readonly<FInputProps>) {
   return <TextInput {...props} />;
 }

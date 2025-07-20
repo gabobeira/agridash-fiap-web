@@ -5,8 +5,8 @@ import {
   ButtonProps as MantineButtonProps,
 } from '@mantine/core';
 
-export type ButtonProps = MantineButtonProps;
+export type FButtonProps = MantineButtonProps;
 
-export default function Button(props: Readonly<ButtonProps>) {
+export default function FButton(props: Readonly<FButtonProps>) {
   return <MantineButton {...props} />;
 }

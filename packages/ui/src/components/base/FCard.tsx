@@ -6,15 +6,15 @@ import {
   Title,
 } from '@mantine/core';
 
-export interface CardProps extends Omit<MantineCardProps, 'title'> {
+export interface FCardProps extends Omit<MantineCardProps, 'title'> {
   title?: string;
 }
 
-export default function Card({
+export default function FCard({
   title,
   children,
   ...props
-}: Readonly<CardProps>) {
+}: Readonly<FCardProps>) {
   return (
     <MantineCard shadow="sm" padding="lg" radius="md" withBorder {...props}>
       {title && (

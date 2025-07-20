@@ -1,11 +1,11 @@
 'use client';
 
-import { SensorCard, WeatherWidget, DataTable } from '@repo/ui';
-import type { WeatherData, DataRow } from '@repo/ui';
+import { FSensorCard, FWeatherWidget, FDataTable } from '@repo/ui';
+import type { FWeatherData, FDataRow } from '@repo/ui';
 
 interface DashboardExampleProps {
-  weatherData: WeatherData;
-  sensorData: DataRow[];
+  weatherData: FWeatherData;
+  sensorData: FDataRow[];
 }
 
 export default function DashboardExample({
@@ -28,7 +28,7 @@ export default function DashboardExample({
     <>
       {/* Sensores */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <SensorCard
+        <FSensorCard
           sensorName="Sensor Temperatura"
           sensorType="temperature"
           currentValue={25.5}
@@ -38,7 +38,7 @@ export default function DashboardExample({
           status="normal"
           location="Setor A - Campo 1"
         />
-        <SensorCard
+        <FSensorCard
           sensorName="Sensor Umidade"
           sensorType="humidity"
           currentValue={85}
@@ -48,7 +48,7 @@ export default function DashboardExample({
           status="warning"
           location="Setor B - Campo 2"
         />
-        <SensorCard
+        <FSensorCard
           sensorName="Sensor pH"
           sensorType="ph"
           currentValue={3.2}
@@ -62,11 +62,11 @@ export default function DashboardExample({
 
       {/* Widget Meteorológico */}
       <div className="mb-8">
-        <WeatherWidget weather={weatherData} />
+        <FWeatherWidget weather={weatherData} />
       </div>
 
       {/* Tabela de Dados */}
-      <DataTable
+      <FDataTable
         title="Histórico de Leituras dos Sensores"
         data={sensorData}
         onView={handleView}

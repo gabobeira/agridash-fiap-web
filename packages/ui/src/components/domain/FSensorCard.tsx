@@ -3,7 +3,7 @@
 import { Card, Text, Group, Badge, Progress, ThemeIcon } from '@mantine/core';
 import { IconThermometer, IconDroplet, IconLeaf } from '@tabler/icons-react';
 
-export interface SensorCardProps {
+export interface FSensorCardProps {
   sensorName: string;
   sensorType: 'temperature' | 'humidity' | 'ph';
   currentValue: number;
@@ -26,7 +26,7 @@ const statusColors = {
   critical: 'red',
 };
 
-export default function SensorCard({
+export default function FSensorCard({
   sensorName,
   sensorType,
   currentValue,
@@ -35,7 +35,7 @@ export default function SensorCard({
   maxValue,
   status,
   location,
-}: Readonly<SensorCardProps>) {
+}: Readonly<FSensorCardProps>) {
   const Icon = sensorIcons[sensorType];
   const percentage = ((currentValue - minValue) / (maxValue - minValue)) * 100;
 
