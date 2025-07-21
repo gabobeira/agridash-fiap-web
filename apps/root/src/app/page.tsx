@@ -1,208 +1,184 @@
-import Image from 'next/image';
-import { FCard, FInput, FButton } from '@repo/ui';
-import { Title, Group } from '@mantine/core';
+import { FButton, FCard, FTitle, FText, FLink } from '@repo/ui';
+import { Container, Stack, Group, Center, Grid, GridCol } from '@mantine/core';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-16">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+      <Container size="xl" py="xl">
         {/* Header */}
-        <header className="text-center mb-16">
-          <div className="flex justify-center mb-6">
-            <Image
-              className="dark:invert"
-              src="/next.svg"
-              alt="AgriDash Logo"
-              width={200}
-              height={50}
-              priority
-            />
-          </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-            AgriDash FIAP teste
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Plataforma de gestão agrícola com arquitetura de microfrontends
-          </p>
-        </header>
-
-        {/* Microfrontends Navigation */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {/* Dashboard Microfrontend */}
-          <FCard>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-8 h-8 text-blue-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-3">
-                Dashboard
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Painel principal com métricas, gráficos e visão geral dos dados
-                agrícolas
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <a
-                  href="/dashboard"
-                  className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium text-center"
-                >
-                  Acessar Dashboard
-                </a>
-                <a
-                  href="http://localhost:3001/dashboard"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors font-medium text-center"
-                >
-                  Dashboard Direto ↗
-                </a>
-              </div>
+        <Center mb="xl">
+          <Stack align="center" gap="md">
+            <div className="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center">
+              <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L13.09 8.26L20 9L13.09 9.74L12 16L10.91 9.74L4 9L10.91 8.26L12 2Z"/>
+              </svg>
             </div>
-          </FCard>
+            <FTitle order={1} size="3rem" ta="center" c="green.8">
+              FIAP Farms
+            </FTitle>
+            <FTitle order={2} size="1.5rem" ta="center" c="green.7" fw={400}>
+              Cooperativa de Fazendas
+            </FTitle>
+            <FText size="xl" ta="center" c="gray.7" maw={600}>
+              Solução estratégica para gestão de vendas e planejamento assertivo dos alimentos 
+              com maior lucro para os integrantes da cooperativa.
+            </FText>
+          </Stack>
+        </Center>
 
-          {/* Analytics Microfrontend (Futuro) */}
-          <FCard>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-8 h-8 text-green-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-3">
-                Analytics
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Análises avançadas e relatórios detalhados sobre performance
-              </p>
-              <button
-                disabled
-                className="inline-block bg-gray-300 text-gray-500 px-6 py-3 rounded-lg cursor-not-allowed font-medium"
-              >
-                Em desenvolvimento
-              </button>
-            </div>
-          </FCard>
+        {/* Authentication Section */}
+        <Center mb="xl">
+          <Group gap="md">
+            <FLink href="/login">
+              <FButton variant="outline" size="lg">
+                Fazer Login
+              </FButton>
+            </FLink>
+            <FLink href="/cadastro">
+              <FButton size="lg">
+                Cadastrar-se
+              </FButton>
+            </FLink>
+          </Group>
+        </Center>
 
-          {/* Settings Microfrontend (Futuro) */}
-          <FCard>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg
-                  className="w-8 h-8 text-purple-600"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-3">
-                Configurações
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Gerenciamento de usuários, permissões e configurações do sistema
-              </p>
-              <button
-                disabled
-                className="inline-block bg-gray-300 text-gray-500 px-6 py-3 rounded-lg cursor-not-allowed font-medium"
-              >
-                Em desenvolvimento
-              </button>
-            </div>
-          </FCard>
-        </div>
-
-        {/* Architecture Info */}
-        <div className="mt-16 text-center">
-          <FCard className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Arquitetura Microfrontends
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Esta aplicação utiliza a abordagem Multi Zones do Next.js para
-              implementar uma arquitetura de microfrontends, permitindo
-              desenvolvimento e deploy independente de cada módulo.
-            </p>
-            <div className="grid md:grid-cols-3 gap-6 text-sm">
-              <div className="p-4 bg-blue-50 rounded-lg">
-                <h4 className="font-semibold text-blue-900 mb-2">Root App</h4>
-                <p className="text-blue-700">
-                  Aplicação principal que orquestra os microfrontends
-                </p>
-                <code className="text-xs bg-blue-100 px-2 py-1 rounded mt-2 block">
-                  localhost:3000
-                </code>
-              </div>
-              <div className="p-4 bg-green-50 rounded-lg">
-                <h4 className="font-semibold text-green-900 mb-2">Dashboard</h4>
-                <p className="text-green-700">
-                  Microfrontend independente com métricas e dados
-                </p>
-                <code className="text-xs bg-green-100 px-2 py-1 rounded mt-2 block">
-                  localhost:3001
-                </code>
-              </div>
-              <div className="p-4 bg-purple-50 rounded-lg">
-                <h4 className="font-semibold text-purple-900 mb-2">
-                  Shared UI
-                </h4>
-                <p className="text-purple-700">
-                  Biblioteca de componentes compartilhados
-                </p>
-                <code className="text-xs bg-purple-100 px-2 py-1 rounded mt-2 block">
-                  @repo/ui
-                </code>
-              </div>
-            </div>
-          </FCard>
-        </div>
-
-        {/* Mantine UI Demo Section */}
-        <div className="mt-16 max-w-2xl mx-auto">
-          <FCard>
-            <div className="text-center mb-6">
-              <Title order={2} mb="md">
-                Mantine UI Demo
-              </Title>
-              <p className="text-gray-600">
-                Exemplo de componente TextInput do Mantine UI integrado com
-                Tailwind CSS
-              </p>
-            </div>
-            <div className="space-y-4">
-              <FInput
-                label="Nome do Sensor"
-                placeholder="Digite o nome do sensor"
-                description="Nome identificador para o sensor agrícola"
-                withAsterisk
-              />
-              <FInput
-                label="Localização"
-                placeholder="Ex: Setor A - Campo 1"
-                description="Localização física do sensor"
-              />
-              <Group justify="center" mt="lg">
-                <FButton variant="filled" color="blue">
-                  Salvar Sensor
+        {/* Features Section */}
+        <Grid mb="xl">
+          <GridCol span={{ base: 12, md: 4 }}>
+            <FCard padding="xl" radius="md" withBorder h="100%">
+              <Stack align="center" gap="md">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM9 17H7V10H9V17ZM13 17H11V7H13V17ZM17 17H15V13H17V17Z"/>
+                  </svg>
+                </div>
+                <FTitle order={3} ta="center">
+                  Análise de Vendas
+                </FTitle>
+                <FText ta="center" c="gray.6">
+                  Análise estratégica das vendas com relatórios detalhados, 
+                  identificação de produtos mais lucrativos e tendências de mercado.
+                </FText>
+                <FButton variant="light" disabled>
+                  Em Breve
                 </FButton>
-              </Group>
-            </div>
-          </FCard>
-        </div>
-      </div>
+              </Stack>
+            </FCard>
+          </GridCol>
+
+          <GridCol span={{ base: 12, md: 4 }}>
+            <FCard padding="xl" radius="md" withBorder h="100%">
+              <Stack align="center" gap="md">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-orange-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M7 18H17V16H7V18Z"/>
+                    <path d="M7 14H17V12H7V14Z"/>
+                  </svg>
+                </div>
+                <FTitle order={3} ta="center">
+                  Gestão de Transações
+                </FTitle>
+                <FText ta="center" c="gray.6">
+                  Controle completo de todas as transações financeiras, 
+                  incluindo vendas, compras e fluxo de caixa da cooperativa.
+                </FText>
+                <FButton variant="light" disabled>
+                  Em Breve
+                </FButton>
+              </Stack>
+            </FCard>
+          </GridCol>
+
+          <GridCol span={{ base: 12, md: 4 }}>
+            <FCard padding="xl" radius="md" withBorder h="100%">
+              <Stack align="center" gap="md">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12S6.48 22 12 22 22 17.52 22 12 17.52 2 12 2ZM17 13H13V17H11V13H7V11H11V7H13V11H17V13Z"/>
+                  </svg>
+                </div>
+                <FTitle order={3} ta="center">
+                  Controle de Estoque
+                </FTitle>
+                <FText ta="center" c="gray.6">
+                  Gerenciamento inteligente do estoque com alertas automáticos, 
+                  controle de validade e otimização de armazenamento.
+                </FText>
+                <FButton variant="light" disabled>
+                  Em Breve
+                </FButton>
+              </Stack>
+            </FCard>
+          </GridCol>
+        </Grid>
+
+        {/* Additional Features */}
+        <Grid>
+          <GridCol span={{ base: 12, md: 6 }}>
+            <FCard padding="xl" radius="md" withBorder h="100%">
+              <Stack gap="md">
+                <Group>
+                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M21 19V20H3V19L5 17V11C5 7.9 7.03 5.17 10 4.29C10 4.19 10 4.1 10 4C10 2.9 10.9 2 12 2S14 2.9 14 4C14 4.1 14 4.19 14 4.29C16.97 5.17 19 7.9 19 11V17L21 19ZM14 21C14 22.1 13.1 23 12 23S10 22.1 10 21"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <FTitle order={3}>
+                      Sistema de Notificações
+                    </FTitle>
+                    <FText c="gray.6">
+                      Alertas inteligentes sobre oportunidades de vendas, 
+                      produtos próximos do vencimento e análises de mercado.
+                    </FText>
+                  </div>
+                </Group>
+                <FButton variant="light" disabled>
+                  Em Breve
+                </FButton>
+              </Stack>
+            </FCard>
+          </GridCol>
+
+          <GridCol span={{ base: 12, md: 6 }}>
+            <FCard padding="xl" radius="md" withBorder h="100%">
+              <Stack gap="md">
+                <Group>
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M17 10.5V7C17 4.24 14.76 2 12 2S7 4.24 7 7V10.5C6.45 10.5 6 10.95 6 11.5V17.5C6 18.05 6.45 18.5 7 18.5H17C17.55 18.5 18 18.05 18 17.5V11.5C18 10.95 17.55 10.5 17 10.5M15.5 10.5H8.5V7C8.5 5.07 10.07 3.5 12 3.5S15.5 5.07 15.5 7V10.5Z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <FTitle order={3}>
+                      Plataforma Cross-Platform
+                    </FTitle>
+                    <FText c="gray.6">
+                      Acesso completo via web desktop e aplicativo mobile, 
+                      garantindo produtividade em qualquer lugar.
+                    </FText>
+                  </div>
+                </Group>
+                <FButton variant="light" disabled>
+                  Em Breve
+                </FButton>
+              </Stack>
+            </FCard>
+          </GridCol>
+        </Grid>
+
+        {/* Footer */}
+        <Center mt="xl" pt="xl">
+          <Stack align="center" gap="sm">
+            <FText size="sm" c="gray.6" ta="center">
+              © 2025 FIAP Farms - Cooperativa de Fazendas
+            </FText>
+            <FText size="xs" c="gray.5" ta="center">
+              Solução desenvolvida para otimizar a gestão estratégica da cooperativa
+            </FText>
+          </Stack>
+        </Center>
+      </Container>
     </div>
   );
 }
