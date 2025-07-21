@@ -9,7 +9,19 @@ export default function Home() {
           {/* Header */}
           <Center mb="xl">
             <Stack align="center" gap="md">
-              <FTitle order={1} size="3.5rem" ta="center" c="green.6">
+              <FTitle
+                order={1}
+                size="3.5rem"
+                ta="center"
+                fw={800}
+                style={{
+                  background:
+                    'linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #3b82f6 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
                 AgriDash
               </FTitle>
               <FTitle order={2} size="1.5rem" ta="center" c="white" fw={400}>
