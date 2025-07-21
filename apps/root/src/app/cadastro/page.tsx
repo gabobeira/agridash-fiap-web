@@ -1,51 +1,53 @@
 'use client';
+import { AuthPageTemplate } from '@/components/AuthPageTemplate';
+import {
+  Stack,
+  Group,
+  PasswordInput,
+  Button,
+  Anchor as Link,
+  TextInput,
+} from '@mantine/core';
 
-import { Stack, Container, Group } from '@mantine/core';
-import { FTitle, FInput, FPasswordInput, FButton, FLink } from '@repo/ui';
+const CadastroForm = () => (
+  <form>
+    <Stack gap="lg">
+      <Stack gap="md">
+        <TextInput
+          label="Nome"
+          placeholder="Digite seu nome completo"
+          required
+        />
+        <TextInput
+          label="Email"
+          placeholder="Digite seu email"
+          type="email"
+          required
+        />
+        <PasswordInput label="Senha" placeholder="Digite sua senha" required />
+        <PasswordInput
+          label="Confirmar Senha"
+          placeholder="Confirme sua senha"
+          required
+        />
+      </Stack>
+      <Button fullWidth>Cadastrar</Button>
+    </Stack>
+  </form>
+);
 
 export default function CadastroPage() {
   return (
-    <Container size="xs" py="xl">
-      <Stack gap="lg">
-        <FTitle order={1} ta="center">
-          Cadastro
-        </FTitle>
-
-        <form>
-          <Stack gap="md">
-            <FInput
-              label="Nome"
-              placeholder="Digite seu nome completo"
-              required
-            />
-
-            <FInput
-              label="Email"
-              placeholder="Digite seu email"
-              type="email"
-              required
-            />
-
-            <FPasswordInput
-              label="Senha"
-              placeholder="Digite sua senha"
-              required
-            />
-
-            <FPasswordInput
-              label="Confirmar Senha"
-              placeholder="Confirme sua senha"
-              required
-            />
-
-            <FButton fullWidth>Cadastrar</FButton>
-          </Stack>
-        </form>
-
+    <AuthPageTemplate
+      title="Cadastre-se"
+      content={<CadastroForm />}
+      footer={
         <Group justify="center">
-          <FLink href="/login">Já tem uma conta? Faça login</FLink>
+          <Link href="/login" fz="sm" c="blue.6">
+            Já tem uma conta? Faça login
+          </Link>
         </Group>
-      </Stack>
-    </Container>
+      }
+    />
   );
 }

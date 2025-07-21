@@ -1,39 +1,44 @@
 'use client';
 
-import { Stack, Container, Group } from '@mantine/core';
-import { FTitle, FInput, FPasswordInput, FButton, FLink } from '@repo/ui';
+import { AuthPageTemplate } from '@/components/AuthPageTemplate';
+import {
+  Stack,
+  Group,
+  PasswordInput,
+  Button,
+  Anchor as Link,
+  TextInput,
+} from '@mantine/core';
+
+const LoginForm = () => (
+  <form>
+    <Stack gap="lg">
+      <Stack gap="md">
+        <TextInput
+          label="Email"
+          placeholder="Digite seu email"
+          type="email"
+          required
+        />
+        <PasswordInput label="Senha" placeholder="Digite sua senha" required />
+      </Stack>
+      <Button fullWidth>Entrar</Button>
+    </Stack>
+  </form>
+);
 
 export default function LoginPage() {
   return (
-    <Container size="xs" py="xl">
-      <Stack gap="lg">
-        <FTitle order={1} ta="center">
-          Login
-        </FTitle>
-
-        <form>
-          <Stack gap="md">
-            <FInput
-              label="Email"
-              placeholder="Digite seu email"
-              type="email"
-              required
-            />
-
-            <FPasswordInput
-              label="Senha"
-              placeholder="Digite sua senha"
-              required
-            />
-
-            <FButton fullWidth>Entrar</FButton>
-          </Stack>
-        </form>
-
+    <AuthPageTemplate
+      title="Preencha suas credenciais"
+      content={<LoginForm />}
+      footer={
         <Group justify="center">
-          <FLink href="/cadastro">Não tem uma conta? Cadastre-se</FLink>
+          <Link href="/cadastro" fz="sm" c="blue.6">
+            Não tem uma conta? Cadastre-se
+          </Link>
         </Group>
-      </Stack>
-    </Container>
+      }
+    />
   );
 }
