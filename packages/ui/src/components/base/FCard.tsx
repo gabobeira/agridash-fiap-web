@@ -16,7 +16,7 @@ export default function FCard({
   ...props
 }: Readonly<FCardProps>) {
   return (
-    <MantineCard shadow="sm" padding="lg" radius="md" withBorder {...props}>
+    <MantineCard shadow="sm" padding="lg" radius="lg" withBorder {...props}>
       {title && (
         <Title order={3} mb="md">
           {title}

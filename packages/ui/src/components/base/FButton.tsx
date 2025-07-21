@@ -8,5 +8,5 @@ import {
 export type FButtonProps = MantineButtonProps;
 
 export default function FButton(props: Readonly<FButtonProps>) {
-  return <MantineButton {...props} />;
+  return <MantineButton radius="lg" {...props} />;
 }
