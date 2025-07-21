@@ -2,6 +2,9 @@
 export { default as MantineProvider } from './providers/MantineProvider';
 export type { MantineProviderProps } from './providers/MantineProvider';
 
+// Theme
+export { theme } from './theme';
+
 // Base Components (Mantine wrappers)
 export { default as FCard } from './components/base/FCard';
 export type { FCardProps } from './components/base/FCard';
