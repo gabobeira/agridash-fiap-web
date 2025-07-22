@@ -1,11 +1,11 @@
 'use client';
 import { AuthPageTemplate } from '@/components/AuthPageTemplate';
 import {
-  Stack,
+  Anchor,
+  Button,
   Group,
   PasswordInput,
-  Button,
-  Anchor as Link,
+  Stack,
   TextInput,
 } from '@mantine/core';
 
@@ -39,13 +39,13 @@ const CadastroForm = () => (
 export default function CadastroPage() {
   return (
     <AuthPageTemplate
-      title="Cadastre-se"
+      title="Cadastro"
       content={<CadastroForm />}
       footer={
         <Group justify="center">
-          <Link href="/login" fz="sm" c="blue.6">
+          <Anchor href="/login" fz="sm" c="blue.6">
             Já tem uma conta? Faça login
-          </Link>
+          </Anchor>
         </Group>
       }
     />

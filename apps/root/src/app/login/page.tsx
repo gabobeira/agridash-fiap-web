@@ -2,11 +2,11 @@
 
 import { AuthPageTemplate } from '@/components/AuthPageTemplate';
 import {
-  Stack,
+  Anchor,
+  Button,
   Group,
   PasswordInput,
-  Button,
-  Anchor as Link,
+  Stack,
   TextInput,
 } from '@mantine/core';
 
@@ -30,13 +30,13 @@ const LoginForm = () => (
 export default function LoginPage() {
   return (
     <AuthPageTemplate
-      title="Preencha suas credenciais"
+      title="Login"
       content={<LoginForm />}
       footer={
         <Group justify="center">
-          <Link href="/cadastro" fz="sm" c="blue.6">
+          <Anchor href="/cadastro" fz="sm" c="blue.6">
             Não tem uma conta? Cadastre-se
-          </Link>
+          </Anchor>
         </Group>
       }
     />
