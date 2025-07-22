@@ -14,4 +14,10 @@ export { default as FWeatherWidget } from './components/FWeatherWidget';
 export type { FWeatherData } from './components/FWeatherWidget';
 
 export { default as FDataTable } from './components/FDataTable';
-export type { FDataTableProps, FDataRow } from './components/FDataTable';
+export type { FDataRow, FDataTableProps } from './components/FDataTable';
+
+export { default as FTable } from './components/FTable';
+export type { FTableHeader, FTableProps } from './components/FTable';
+
+export { default as FNavbar } from './components/FNavbar';
+export type { FNavbarLink, FNavbarProps } from './components/FNavbar';
