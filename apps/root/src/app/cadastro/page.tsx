@@ -1,5 +1,5 @@
 'use client';
-import { AuthPageTemplate } from '@/components/AuthPageTemplate';
+import { AuthLayout } from '@/components/AuthLayout';
 import {
   Anchor,
   Button,
@@ -38,9 +38,8 @@ const CadastroForm = () => (
 
 export default function CadastroPage() {
   return (
-    <AuthPageTemplate
+    <AuthLayout
       title="Cadastro"
-      content={<CadastroForm />}
       footer={
         <Group justify="center">
           <Anchor href="/login" fz="sm" c="blue.6">
@@ -48,6 +47,8 @@ export default function CadastroPage() {
           </Anchor>
         </Group>
       }
-    />
+    >
+      <CadastroForm />
+    </AuthLayout>
   );
 }

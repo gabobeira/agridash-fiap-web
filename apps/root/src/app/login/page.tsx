@@ -1,6 +1,6 @@
 'use client';
 
-import { AuthPageTemplate } from '@/components/AuthPageTemplate';
+import { AuthLayout } from '@/components/AuthLayout';
 import {
   Anchor,
   Button,
@@ -29,9 +29,8 @@ const LoginForm = () => (
 
 export default function LoginPage() {
   return (
-    <AuthPageTemplate
+    <AuthLayout
       title="Login"
-      content={<LoginForm />}
       footer={
         <Group justify="center">
           <Anchor href="/cadastro" fz="sm" c="blue.6">
@@ -39,6 +38,8 @@ export default function LoginPage() {
           </Anchor>
         </Group>
       }
-    />
+    >
+      <LoginForm />
+    </AuthLayout>
   );
 }

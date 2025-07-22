@@ -3,14 +3,14 @@
 import { Anchor, Card, Container, Group, Stack, Title } from '@mantine/core';
 import { IconChevronLeft } from '@tabler/icons-react';
 
-export const AuthPageTemplate = ({
+export const AuthLayout = ({
   title,
-  content,
   footer,
+  children,
 }: {
   title: string;
-  content: React.ReactNode;
   footer: React.ReactNode;
+  children: React.ReactNode;
 }) => {
   return (
     <Container size="xl" py="xl" className="flex flex-col items-center">
@@ -19,7 +19,7 @@ export const AuthPageTemplate = ({
           <Title order={3} c="neutral.8">
             {title}
           </Title>
-          {content}
+          {children}
           <Group justify="center">{footer}</Group>
         </Stack>
       </Card>

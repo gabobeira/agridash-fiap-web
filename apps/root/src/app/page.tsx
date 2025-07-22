@@ -1,18 +1,7 @@
 import {
-  IconCrossPlatform,
-  IconNotifications,
-  IconSales,
-  IconStock,
-  IconTransactions,
-} from '@/assets/icons';
-import { HomeCard } from '@/components/HomeCard';
-import { MainTitle } from '@/components/MainTitle';
-import {
   Button,
   Center,
   Container,
-  Grid,
-  GridCol,
   Group,
   Anchor as Link,
   Stack,
@@ -25,7 +14,21 @@ export default function Home() {
     <Container size="xl" py="xl">
       <Center mb="xl">
         <Stack align="center" gap="md">
-          <MainTitle>AgriDash</MainTitle>
+          <Title
+            order={1}
+            size="4.5rem"
+            ta="center"
+            fw={800}
+            style={{
+              background:
+                'linear-gradient(135deg, var(--mantine-color-success-6) 0%, var(--mantine-color-blue-6) 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            AgriDash
+          </Title>
           <Title order={2} size="1.5rem" ta="center" c="neutral.6" fw={500}>
             Sistema de gestão de Cooperativas Agrícolas
           </Title>
@@ -44,7 +47,7 @@ export default function Home() {
         </Group>
       </Center>
 
-      <Grid mb="xl" gutter="md">
+      {/* <Grid mb="xl" gutter="md">
         <GridCol span={{ base: 12, sm: 6, md: 4, lg: 2.4 }}>
           <HomeCard
             icon={<IconSales />}
@@ -84,7 +87,7 @@ export default function Home() {
             description="Conecte-se com diversos canais de venda e amplie seu alcance."
           />
         </GridCol>
-      </Grid>
+      </Grid> */}
     </Container>
   );
 }
