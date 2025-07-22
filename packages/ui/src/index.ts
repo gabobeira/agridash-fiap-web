@@ -18,6 +18,3 @@ export type { FDataRow, FDataTableProps } from './components/FDataTable';
 
 export { default as FTable } from './components/FTable';
 export type { FTableHeader, FTableProps } from './components/FTable';
-
-export { default as FNavbar } from './components/FNavbar';
-export type { FNavbarLink, FNavbarProps } from './components/FNavbar';

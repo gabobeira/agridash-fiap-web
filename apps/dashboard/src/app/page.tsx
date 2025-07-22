@@ -1,7 +1,13 @@
-'use client';
-
+import { DashboardMain } from '@/components/DashboardMain';
 import { Text } from '@mantine/core';
 
-export default function Dashboard() {
-  return <Text>Dashboard</Text>;
+export default function HomeDashboard() {
+  return (
+    <DashboardMain
+      title="Visão geral"
+      subtitle="Microfrontend independente com componentes compartilhados"
+    >
+      <Text>[Inserir gráficos aqui...]</Text>
+    </DashboardMain>
+  );
 }

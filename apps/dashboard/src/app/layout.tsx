@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description:
     'Solução estratégica para gestão de vendas e planejamento assertivo dos alimentos com maior lucro para os integrantes da cooperativa.',
   icons: {
-    icon: '/plant-icon.svg',
+    icon: '/leaf.svg',
   },
 };
 

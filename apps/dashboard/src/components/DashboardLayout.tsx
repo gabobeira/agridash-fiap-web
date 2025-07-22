@@ -1,30 +1,30 @@
 'use client';
 
-import { AppShell, NavLink, Title } from '@mantine/core';
+import { AppShell, Code, Divider, Flex, NavLink, Title } from '@mantine/core';
 import {
   IconBell,
-  IconBuildingCottage,
-  IconBuildingWarehouse,
-  IconDatabaseDollar,
+  IconHomeStats,
   IconLogout,
+  IconSwitchHorizontal,
+  IconWheat,
 } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 const navbarLinks = [
   {
-    leftSection: <IconBuildingCottage />,
+    leftSection: <IconHomeStats />,
     label: 'Início',
     href: '/dashboard',
     active: true,
   },
   {
-    leftSection: <IconDatabaseDollar />,
+    leftSection: <IconSwitchHorizontal />,
     label: 'Transações',
     href: '/dashboard/transacoes',
   },
   {
-    leftSection: <IconBuildingWarehouse />,
+    leftSection: <IconWheat />,
     label: 'Estoque',
     href: '/dashboard/estoque',
   },
@@ -46,6 +46,11 @@ export default function DashboardLayout({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  if (!mounted) {
+    return null; // Prevents hydration mismatch
+  }
+
   return (
     <AppShell
       navbar={{
@@ -55,27 +60,50 @@ export default function DashboardLayout({
       }}
       padding="md"
     >
-      <AppShell.Navbar bg="neutral.0">
+      <AppShell.Navbar bg="neutral.0" p="md">
         <AppShell.Section>
-          <Title order={3} c="neutral.8" p="md">
-            AgriDash
-          </Title>
+          <Flex gap="md" align="center" justify="space-between" p="md">
+            <Title
+              order={3}
+              fw={800}
+              style={{
+                background:
+                  'linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #3b82f6 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              AgriDash
+            </Title>
+            <Code>v1.0.0</Code>
+          </Flex>
         </AppShell.Section>
+        <Divider />
         <AppShell.Section grow>
-          {mounted &&
-            navbarLinks.map((link, index) => (
-              <NavLink
-                key={`link-${index}-${link.label}`}
-                label={link.label}
-                href={link.href}
-                leftSection={link.leftSection}
-                active={pathname === link.href}
-                p="md"
-              />
-            ))}
+          {navbarLinks.map((link, index) => (
+            <NavLink
+              key={`link-${index}-${link.label}`}
+              label={link.label}
+              href={link.href}
+              leftSection={link.leftSection}
+              active={mounted && pathname === link.href}
+              p="md"
+              my="xs"
+              bdrs="sm"
+            />
+          ))}
         </AppShell.Section>
+        <Divider />
         <AppShell.Section>
-          <NavLink label="Sair" href="/" leftSection={<IconLogout />} p="md" />
+          <NavLink
+            label="Sair"
+            href="/"
+            leftSection={<IconLogout />}
+            p="md"
+            mt="xs"
+            bdrs="sm"
+          />
         </AppShell.Section>
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>
