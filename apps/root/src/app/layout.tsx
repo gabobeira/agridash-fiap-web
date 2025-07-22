@@ -1,8 +1,10 @@
+import './globals.css';
+
 import { Center, Container, Stack, Text } from '@mantine/core';
-import { MantineProvider } from '@repo/ui';
+import { FLoaderFullScreen, MantineProvider } from '@repo/ui';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
+import { Suspense } from 'react';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -35,7 +37,9 @@ export default function RootLayout({
       >
         <MantineProvider>
           <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-neutral-100 to-neutral-200 flex flex-col">
-            <div className="flex-1 flex items-center">{children}</div>
+            <div className="flex-1 flex items-center justify-center">
+              <Suspense fallback={<FLoaderFullScreen />}>{children}</Suspense>
+            </div>
             <footer className="mt-auto">
               <Container size="xl">
                 <Center py="xl">

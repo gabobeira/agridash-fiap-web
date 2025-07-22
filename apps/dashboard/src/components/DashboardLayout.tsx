@@ -68,7 +68,7 @@ export default function DashboardLayout({
               fw={800}
               style={{
                 background:
-                  'linear-gradient(135deg, #22c55e 0%, #16a34a 50%, #3b82f6 100%)',
+                  'linear-gradient(135deg, var(--mantine-color-success-6) 0%, var(--mantine-color-blue-6) 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',

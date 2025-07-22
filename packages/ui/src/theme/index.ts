@@ -90,10 +90,10 @@ export const theme = createTheme({
     fiap,
     neutral,
   },
-  primaryColor: 'success',
+  primaryColor: 'brand',
   defaultGradient: {
     from: 'success.6',
-    to: 'success.8',
+    to: 'blue.6',
     deg: 45,
   },
   fontFamily: 'Inter, system-ui, sans-serif',

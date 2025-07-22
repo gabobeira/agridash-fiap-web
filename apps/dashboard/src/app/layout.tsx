@@ -1,9 +1,10 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
 import DashboardLayout from '@/components/DashboardLayout';
-import { MantineProvider } from '@repo/ui';
+import { FLoaderFullScreen, MantineProvider } from '@repo/ui';
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import { Suspense } from 'react';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -35,7 +36,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <MantineProvider>
-          <DashboardLayout>{children}</DashboardLayout>
+          <Suspense fallback={<FLoaderFullScreen />}>
+            <DashboardLayout>{children}</DashboardLayout>
+          </Suspense>
         </MantineProvider>
       </body>
     </html>

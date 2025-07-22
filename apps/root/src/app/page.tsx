@@ -25,7 +25,7 @@ export default function Home() {
     <Container size="xl" py="xl">
       <Center mb="xl">
         <Stack align="center" gap="md">
-          <MainTitle>Agridash</MainTitle>
+          <MainTitle>AgriDash</MainTitle>
           <Title order={2} size="1.5rem" ta="center" c="neutral.6" fw={500}>
             Sistema de gestão de Cooperativas Agrícolas
           </Title>
@@ -39,9 +39,7 @@ export default function Home() {
       <Center mb="xl">
         <Group gap="md">
           <Link href="/login">
-            <Button size="lg" color="green.6">
-              Acesse sua conta
-            </Button>
+            <Button size="lg">Acesse sua conta</Button>
           </Link>
         </Group>
       </Center>
