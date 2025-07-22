@@ -1,6 +1,15 @@
 'use client';
 
-import { AppShell, Code, Divider, Flex, NavLink, Title } from '@mantine/core';
+import {
+  AppShell,
+  Burger,
+  Code,
+  Divider,
+  Flex,
+  NavLink,
+  Title,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import {
   IconBell,
   IconHomeStats,
@@ -40,6 +49,7 @@ export default function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [opened, { toggle }] = useDisclosure();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
@@ -47,35 +57,46 @@ export default function DashboardLayout({
     setMounted(true);
   }, []);
 
+  const renderLogo = () => (
+    <Title
+      order={3}
+      fw={800}
+      style={{
+        background:
+          'linear-gradient(135deg, var(--mantine-color-success-6) 0%, var(--mantine-color-blue-6) 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+      }}
+    >
+      AgriDash
+    </Title>
+  );
+
   if (!mounted) {
     return null; // Prevents hydration mismatch
   }
 
   return (
     <AppShell
+      padding="md"
+      header={{ height: { base: 60, xs: 0 } }}
       navbar={{
         width: 260,
-        breakpoint: 'sm',
-        collapsed: { mobile: true },
+        breakpoint: 'xs',
+        collapsed: { mobile: !opened },
       }}
-      padding="md"
     >
+      <AppShell.Header hiddenFrom="xs">
+        <Flex gap="md" align="center" justify="space-between" p="md">
+          <Burger opened={opened} onClick={toggle} size="sm" />
+          {!opened ? renderLogo() : null}
+        </Flex>
+      </AppShell.Header>
       <AppShell.Navbar bg="neutral.0" p="md">
         <AppShell.Section>
           <Flex gap="md" align="center" justify="space-between" p="md">
-            <Title
-              order={3}
-              fw={800}
-              style={{
-                background:
-                  'linear-gradient(135deg, var(--mantine-color-success-6) 0%, var(--mantine-color-blue-6) 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              AgriDash
-            </Title>
+            {renderLogo()}
             <Code>v1.0.0</Code>
           </Flex>
         </AppShell.Section>

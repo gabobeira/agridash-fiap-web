@@ -46,48 +46,6 @@ export default function Home() {
           </Link>
         </Group>
       </Center>
-
-      {/* <Grid mb="xl" gutter="md">
-        <GridCol span={{ base: 12, sm: 6, md: 4, lg: 2.4 }}>
-          <HomeCard
-            icon={<IconSales />}
-            title="Análise de Vendas"
-            description="Análise estratégica das vendas com relatórios detalhados e tendências de mercado."
-          />
-        </GridCol>
-
-        <GridCol span={{ base: 12, sm: 6, md: 4, lg: 2.4 }}>
-          <HomeCard
-            icon={<IconTransactions />}
-            title="Gestão de Transações"
-            description="Controle completo de todas as transações financeiras da cooperativa."
-          />
-        </GridCol>
-
-        <GridCol span={{ base: 12, sm: 6, md: 4, lg: 2.4 }}>
-          <HomeCard
-            icon={<IconStock />}
-            title="Controle de Estoque"
-            description="Gerenciamento inteligente do estoque com alertas automáticos."
-          />
-        </GridCol>
-
-        <GridCol span={{ base: 12, sm: 6, md: 4, lg: 2.4 }}>
-          <HomeCard
-            icon={<IconNotifications />}
-            title="Sistema de Notificações"
-            description="Alertas inteligentes sobre oportunidades de vendas."
-          />
-        </GridCol>
-
-        <GridCol span={{ base: 12, sm: 6, md: 4, lg: 2.4 }}>
-          <HomeCard
-            icon={<IconCrossPlatform />}
-            title="Integração Multicanal"
-            description="Conecte-se com diversos canais de venda e amplie seu alcance."
-          />
-        </GridCol>
-      </Grid> */}
     </Container>
   );
 }

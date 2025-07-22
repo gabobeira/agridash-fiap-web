@@ -20,3 +20,9 @@ export { default as FTable } from './components/FTable';
 export type { FTableHeader, FTableProps } from './components/FTable';
 
 export { default as FLoaderFullScreen } from './components/FLoaderFullScreen';
+
+export { default as FAreaChart } from './components/FAreaChart';
+
+export { default as FBarChart } from './components/FBarChart';
+
+export { default as FCard } from './components/FCard';
