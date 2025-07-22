@@ -27,6 +27,8 @@
     "packages/*"
   ],
   "dependencies": {
-    "@tabler/icons-react": "^3.34.1"
+    "@mantine/form": "^8.2.1",
+    "@tabler/icons-react": "^3.34.1",
+    "firebase": "^12.0.0"
   }
 }
