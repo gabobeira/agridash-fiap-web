@@ -69,16 +69,16 @@ const fiap: MantineColorsTuple = [
 ];
 
 const neutral: MantineColorsTuple = [
-  '#fafafa',
-  '#f5f5f5',
-  '#e5e5e5',
-  '#d4d4d4',
-  '#a3a3a3',
-  '#737373',
-  '#525252',
-  '#404040',
-  '#262626',
-  '#171717',
+  '#f3f4f6',
+  '#e5e7eb',
+  '#d1d5db',
+  '#9ca3af',
+  '#6b7280',
+  '#4b5563',
+  '#374151',
+  '#27303a',
+  '#23272f',
+  '#212529',
 ];
 
 export const theme = createTheme({
