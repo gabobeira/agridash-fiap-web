@@ -8,7 +8,7 @@ import {
   Text,
   UnstyledButton,
 } from '@mantine/core';
-import { IconLogout, IconSwitchHorizontal } from '@tabler/icons-react';
+import { IconLogout } from '@tabler/icons-react';
 import React from 'react';
 
 export interface FNavbarLink {
@@ -24,7 +24,6 @@ export interface FNavbarProps {
   version?: string;
   logo?: React.ReactNode;
   links: FNavbarLink[];
-  onChangeAccount?: () => void;
   onLogout?: () => void;
   width?: number;
   className?: string;
@@ -103,7 +102,6 @@ export default function FNavbar({
   version = 'v3.1.2',
   logo,
   links,
-  onChangeAccount,
   onLogout,
   width = 300,
   className,
@@ -161,13 +159,6 @@ export default function FNavbar({
           borderTop: '1px solid #e9ecef',
         }}
       >
-        {onChangeAccount && (
-          <NavbarLink
-            icon={IconSwitchHorizontal}
-            label="Change account"
-            onClick={onChangeAccount}
-          />
-        )}
         {onLogout && (
           <NavbarLink icon={IconLogout} label="Logout" onClick={onLogout} />
         )}

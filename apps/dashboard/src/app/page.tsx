@@ -32,7 +32,6 @@ export default function Dashboard() {
           version="v1.0.0"
           links={navLinks}
           width={260}
-          onChangeAccount={() => console.log('Change account')}
           onLogout={() => console.log('Logout')}
         />
       </AppShell.Navbar>
