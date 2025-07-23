@@ -1,5 +1,6 @@
 'use client';
 
+import { authUseCase } from '@/services/authService';
 import {
   AppShell,
   Burger,
@@ -53,6 +54,10 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
+  const token = document.cookie;
+
+  console.log(token);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -72,6 +77,13 @@ export default function DashboardLayout({
       AgriDash
     </Title>
   );
+
+  const handleLogout = async () => {
+    console.log('vai sair');
+
+    await authUseCase.signOut();
+    window.location.href = '/login';
+  };
 
   if (!mounted) {
     return null; // Prevents hydration mismatch
@@ -119,11 +131,11 @@ export default function DashboardLayout({
         <AppShell.Section>
           <NavLink
             label="Sair"
-            href="/"
             leftSection={<IconLogout />}
             p="md"
             mt="xs"
             bdrs="sm"
+            onClick={handleLogout}
           />
         </AppShell.Section>
       </AppShell.Navbar>

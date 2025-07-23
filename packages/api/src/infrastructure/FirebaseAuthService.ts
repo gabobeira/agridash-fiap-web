@@ -10,6 +10,17 @@ import {
 import { AuthService } from '../domain/AuthService';
 import { AuthUser } from '../domain/AuthUser';
 
+// Função utilitária para ler o cookie de sessão
+function getSessionToken(): string | null {
+  if (typeof document === 'undefined') return null;
+  return (
+    document.cookie
+      .split('; ')
+      .find(row => row.startsWith('session_token='))
+      ?.split('=')[1] || null
+  );
+}
+
 export class FirebaseAuthService implements AuthService {
   private app: FirebaseApp;
   private auth;
@@ -25,6 +36,12 @@ export class FirebaseAuthService implements AuthService {
 
   async signIn(email: string, password: string): Promise<AuthUser> {
     const result = await signInWithEmailAndPassword(this.auth, email, password);
+    // Obter o token da sessão do usuário
+    const token = await result.user.getIdToken();
+    // Criar cookie de sessão (válido para ambiente browser)
+    if (typeof window !== 'undefined') {
+      document.cookie = `session_token=${token}; path=/; secure; samesite=strict`;
+    }
     return this.mapUser(result.user);
   }
 
@@ -46,9 +63,17 @@ export class FirebaseAuthService implements AuthService {
 
   async signOut(): Promise<void> {
     await fbSignOut(this.auth);
+    // Remove o cookie de sessão
+    if (typeof window !== 'undefined') {
+      document.cookie =
+        'session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    }
   }
 
   getCurrentUser(): AuthUser | null {
+    // Valida se existe o cookie de sessão
+    const sessionToken = getSessionToken();
+    if (!sessionToken) return null;
     const user = this.auth.currentUser;
     return user ? this.mapUser(user) : null;
   }

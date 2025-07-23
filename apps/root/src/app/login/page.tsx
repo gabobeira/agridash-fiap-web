@@ -8,30 +8,27 @@ import {
   Group,
   PasswordInput,
   Stack,
+  Text,
   TextInput,
 } from '@mantine/core';
-import { getAuth } from 'firebase/auth';
 import { useState } from 'react';
 
 const LoginForm = () => {
   const { login, loading, error } = useLogin();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [success, setSuccess] = useState(false);
-
-  const auth = getAuth();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSuccess(false);
     const user = await login(email, password);
-    console.log(user);
 
-    if (user) setSuccess(true);
+    if (user) {
+      window.location.href = '/dashboard';
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form noValidate onSubmit={handleSubmit}>
       <Stack gap="lg">
         <Stack gap="md">
           <TextInput
@@ -50,13 +47,11 @@ const LoginForm = () => {
             onChange={e => setPassword(e.target.value)}
           />
         </Stack>
-        {error && <span style={{ color: 'red' }}>{error}</span>}
-        {success && <span style={{ color: 'green' }}>Login realizado!</span>}
-        {auth.currentUser && (
-          <span style={{ color: 'green' }}>
-            Usuário autenticado! {auth.currentUser.displayName}
-          </span>
-        )}
+        {error ? (
+          <Text c="red" fz="sm">
+            {error}
+          </Text>
+        ) : null}
         <Button fullWidth type="submit" loading={loading} disabled={loading}>
           Entrar
         </Button>
