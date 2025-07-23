@@ -1,6 +1,7 @@
 'use client';
 
 import { AuthLayout } from '@/components/AuthLayout';
+import { PublicAuthGuard } from '@/components/PublicAuthGuard';
 import { getDefaultAuthService, useSignIn } from '@agridash/api';
 import {
   Anchor,
@@ -63,17 +64,19 @@ const LoginForm = () => {
 
 export default function LoginPage() {
   return (
-    <AuthLayout
-      title="Login"
-      footer={
-        <Group justify="center">
-          <Anchor href="/cadastro" fz="sm" c="blue.6">
-            Não tem uma conta? Cadastre-se
-          </Anchor>
-        </Group>
-      }
-    >
-      <LoginForm />
-    </AuthLayout>
+    <PublicAuthGuard>
+      <AuthLayout
+        title="Login"
+        footer={
+          <Group justify="center">
+            <Anchor href="/cadastro" fz="sm" c="blue.6">
+              Não tem uma conta? Cadastre-se
+            </Anchor>
+          </Group>
+        }
+      >
+        <LoginForm />
+      </AuthLayout>
+    </PublicAuthGuard>
   );
 }

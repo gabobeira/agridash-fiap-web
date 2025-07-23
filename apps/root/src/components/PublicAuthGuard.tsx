@@ -1,56 +1,53 @@
 'use client';
 
-import { useStandaloneMode } from '@/hooks/useStandaloneMode';
 import { getDefaultAuthService } from '@agridash/api';
 import { LoadingOverlay } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
-interface AuthGuardProps {
+interface PublicAuthGuardProps {
   children: React.ReactNode;
   fallback?: React.ReactNode;
-  redirectUrl?: string;
+  dashboardUrl?: string;
 }
 
-export function AuthGuard({
+export function PublicAuthGuard({
   children,
   fallback,
-  redirectUrl = '/login',
-}: Readonly<AuthGuardProps>) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  dashboardUrl = '/dashboard',
+}: Readonly<PublicAuthGuardProps>) {
+  const [isUnauthenticated, setIsUnauthenticated] = useState<boolean | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(true);
-  const isStandalone = useStandaloneMode();
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        if (isStandalone || isStandalone === null) return;
-
         setIsLoading(true);
         await new Promise(resolve => setTimeout(resolve, 100));
 
         const authUseCase = getDefaultAuthService();
         const user = await authUseCase.getCurrentUserAsync();
 
-        if (!user) {
-          window.location.href = redirectUrl;
+        if (user) {
+          window.location.href = dashboardUrl;
           return;
         }
 
-        setIsAuthenticated(true);
+        setIsUnauthenticated(true);
       } catch (error) {
-        console.error('Auth verification failed:', error);
-        window.location.href = redirectUrl;
+        console.error('Public auth check failed:', error);
+
+        setIsUnauthenticated(true);
       } finally {
         setIsLoading(false);
       }
     };
 
     checkAuth();
-  }, [redirectUrl, isStandalone]);
+  }, [dashboardUrl]);
 
-  if (isStandalone) return <>{children}</>;
-
-  if (isLoading || isAuthenticated === null) {
+  if (isLoading || isUnauthenticated === null) {
     return (
       fallback || (
         <div style={{ position: 'relative', height: '100vh' }}>
@@ -64,5 +61,5 @@ export function AuthGuard({
     );
   }
 
-  return isAuthenticated ? <>{children}</> : null;
+  return isUnauthenticated ? <>{children}</> : null;
 }

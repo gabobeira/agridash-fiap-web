@@ -1,5 +1,6 @@
 'use client';
 
+import { useNavbarLinks } from '@/hooks/useNavbarLinks';
 import { getDefaultAuthService, useSignOut } from '@agridash/api';
 import {
   AppShell,
@@ -12,40 +13,10 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import {
-  IconBell,
-  IconHomeStats,
-  IconLogout,
-  IconSwitchHorizontal,
-  IconWheat,
-} from '@tabler/icons-react';
+import { IconLogout } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { AuthGuard } from './AuthGuard';
-
-const navbarLinks = [
-  {
-    leftSection: <IconHomeStats />,
-    label: 'Início',
-    href: '/dashboard',
-    active: true,
-  },
-  {
-    leftSection: <IconSwitchHorizontal />,
-    label: 'Transações',
-    href: '/dashboard/transacoes',
-  },
-  {
-    leftSection: <IconWheat />,
-    label: 'Estoque',
-    href: '/dashboard/estoque',
-  },
-  {
-    leftSection: <IconBell />,
-    label: 'Notificações',
-    href: '/dashboard/notificacoes',
-  },
-];
 
 export default function DashboardLayout({
   children,
@@ -58,6 +29,8 @@ export default function DashboardLayout({
 
   const authUseCase = getDefaultAuthService();
   const { signOut, loading: signOutLoading } = useSignOut(authUseCase);
+
+  const navbarLinks = useNavbarLinks();
 
   useEffect(() => {
     setMounted(true);

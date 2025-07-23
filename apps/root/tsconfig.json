@@ -29,7 +29,8 @@
     "jest.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../dashboard/src/hooks/useStandaloneMode.ts"
   ],
   "exclude": ["node_modules"]
 }
