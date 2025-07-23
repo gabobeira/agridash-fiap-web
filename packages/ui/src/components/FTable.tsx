@@ -1,6 +1,6 @@
 'use client';
 
-import { Table, Card, Text } from '@mantine/core';
+import { Card, Table, Text } from '@mantine/core';
 
 export interface FTableHeader {
   key: string;
@@ -38,7 +38,7 @@ export default function FTable({
   const rows = data.map((row, index) => (
     <Table.Tr key={(row.id as string) || `row-${index}`}>
       {headers.map(header => (
-        <Table.Td key={header.key} style={{ width: header.width }}>
+        <Table.Td key={header.key} style={{ width: header.width }} p="md">
           {renderCell
             ? renderCell(header.key, row[header.key], row)
             : (row[header.key] as React.ReactNode)}
