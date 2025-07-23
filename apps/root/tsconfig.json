@@ -20,9 +20,16 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@repo/ui": ["../../packages/ui/src/index.ts"]
+      "@repo/ui": ["../../packages/ui/src/index.ts"],
+      "@agridash/api": ["../../packages/api/src/index.ts"]
     }
   },
-  "include": ["next-env.d.ts", "jest.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "jest.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }

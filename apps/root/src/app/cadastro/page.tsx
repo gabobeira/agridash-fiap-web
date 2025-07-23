@@ -1,5 +1,6 @@
 'use client';
 import { AuthLayout } from '@/components/AuthLayout';
+import { useSignUp } from '@/services/useSignUp';
 import {
   Anchor,
   Button,
@@ -8,33 +9,70 @@ import {
   Stack,
   TextInput,
 } from '@mantine/core';
+import { useState } from 'react';
 
-const CadastroForm = () => (
-  <form>
-    <Stack gap="lg">
-      <Stack gap="md">
-        <TextInput
-          label="Nome"
-          placeholder="Digite seu nome completo"
-          required
-        />
-        <TextInput
-          label="Email"
-          placeholder="Digite seu email"
-          type="email"
-          required
-        />
-        <PasswordInput label="Senha" placeholder="Digite sua senha" required />
-        <PasswordInput
-          label="Confirmar Senha"
-          placeholder="Confirme sua senha"
-          required
-        />
+const CadastroForm = () => {
+  const { signUp, loading, error } = useSignUp();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSuccess(false);
+    if (password !== confirmPassword) {
+      alert('As senhas não coincidem');
+      return;
+    }
+    const user = await signUp(email, password, name);
+    if (user) setSuccess(true);
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <Stack gap="lg">
+        <Stack gap="md">
+          <TextInput
+            label="Nome"
+            placeholder="Digite seu nome completo"
+            required
+            value={name}
+            onChange={e => setName(e.target.value)}
+          />
+          <TextInput
+            label="Email"
+            placeholder="Digite seu email"
+            type="email"
+            required
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+          />
+          <PasswordInput
+            label="Senha"
+            placeholder="Digite sua senha"
+            required
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+          <PasswordInput
+            label="Confirmar Senha"
+            placeholder="Confirme sua senha"
+            required
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+          />
+        </Stack>
+        {error && <span style={{ color: 'red' }}>{error}</span>}
+        {success && <span style={{ color: 'green' }}>Cadastro realizado!</span>}
+        <Button fullWidth type="submit" loading={loading} disabled={loading}>
+          Cadastrar
+        </Button>
       </Stack>
-      <Button fullWidth>Cadastrar</Button>
-    </Stack>
-  </form>
-);
+    </form>
+  );
+};
 
 export default function CadastroPage() {
   return (
