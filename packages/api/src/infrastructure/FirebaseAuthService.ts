@@ -12,29 +12,64 @@ import { AuthService } from '../domain/AuthService';
 import { AuthUser } from '../domain/AuthUser';
 
 export class FirebaseAuthService implements AuthService {
-  private readonly app: FirebaseApp;
+  private readonly app: FirebaseApp | null;
   private readonly auth;
   private currentUserCache: AuthUser | null = null;
   private authStateInitialized: boolean = false;
 
   constructor(firebaseConfig: object) {
-    if (!getApps().length) {
-      this.app = initializeApp(firebaseConfig);
-    } else {
-      this.app = getApps()[0];
+    // Verifica se estamos no ambiente do servidor durante o build
+    if (typeof window === 'undefined' && !process.env.NODE_ENV) {
+      this.app = null;
+      this.auth = null;
+      return;
     }
-    this.auth = getAuth(this.app);
 
-    onAuthStateChanged(this.auth, user => {
-      this.currentUserCache = user ? this.mapUser(user) : null;
+    // Verifica se a configuração é válida
+    if (!this.isValidConfig(firebaseConfig)) {
+      console.warn('Invalid Firebase configuration, Firebase will not be initialized');
+      this.app = null;
+      this.auth = null;
+      return;
+    }
 
-      if (!this.authStateInitialized) {
-        this.authStateInitialized = true;
+    try {
+      if (!getApps().length) {
+        this.app = initializeApp(firebaseConfig);
+      } else {
+        this.app = getApps()[0];
       }
-    });
+      this.auth = getAuth(this.app);
+
+      onAuthStateChanged(this.auth, user => {
+        this.currentUserCache = user ? this.mapUser(user) : null;
+
+        if (!this.authStateInitialized) {
+          this.authStateInitialized = true;
+        }
+      });
+    } catch (error) {
+      console.error('Failed to initialize Firebase:', error);
+      this.app = null;
+      this.auth = null;
+    }
+  }
+
+  private isValidConfig(config: unknown): boolean {
+    const firebaseConfig = config as Record<string, unknown>;
+    return !!(firebaseConfig?.apiKey && 
+           firebaseConfig?.authDomain && 
+           firebaseConfig?.projectId &&
+           firebaseConfig.apiKey !== 'undefined' &&
+           firebaseConfig.authDomain !== 'undefined' &&
+           firebaseConfig.projectId !== 'undefined');
   }
 
   async signIn(email: string, password: string): Promise<AuthUser> {
+    if (!this.auth) {
+      throw new Error('Firebase not initialized');
+    }
+
     try {
       const result = await signInWithEmailAndPassword(
         this.auth,
@@ -56,6 +91,10 @@ export class FirebaseAuthService implements AuthService {
     password: string,
     displayName?: string
   ): Promise<AuthUser> {
+    if (!this.auth) {
+      throw new Error('Firebase not initialized');
+    }
+
     try {
       const result = await createUserWithEmailAndPassword(
         this.auth,
@@ -77,6 +116,10 @@ export class FirebaseAuthService implements AuthService {
   }
 
   async signOut(): Promise<void> {
+    if (!this.auth) {
+      throw new Error('Firebase not initialized');
+    }
+
     try {
       await fbSignOut(this.auth);
       this.currentUserCache = null;
@@ -95,12 +138,16 @@ export class FirebaseAuthService implements AuthService {
   }
 
   async getCurrentUserAsync(): Promise<AuthUser | null> {
+    if (!this.auth) {
+      return null;
+    }
+
     if (this.authStateInitialized) {
       return this.getCurrentUser();
     }
 
     return new Promise(resolve => {
-      const unsubscribe = onAuthStateChanged(this.auth, () => {
+      const unsubscribe = onAuthStateChanged(this.auth!, () => {
         if (this.authStateInitialized) {
           unsubscribe();
           resolve(this.getCurrentUser());

@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { AuthUseCase } from '../application/AuthUseCase';
 
-export function useSignOut(authUseCase: AuthUseCase) {
+export function useSignOut(authUseCase?: AuthUseCase) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function signOut() {
+    if (!authUseCase) {
+      setError('Auth service not available');
+      return false;
+    }
+
     setLoading(true);
     setError(null);
     try {

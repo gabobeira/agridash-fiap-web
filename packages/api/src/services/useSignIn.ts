@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { AuthUseCase } from '../application/AuthUseCase';
 
-export function useSignIn(authUseCase: AuthUseCase) {
+export function useSignIn(authUseCase?: AuthUseCase) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function signIn(email: string, password: string) {
+    if (!authUseCase) {
+      setError('Auth service not available');
+      return null;
+    }
+
     setLoading(true);
     setError(null);
     try {

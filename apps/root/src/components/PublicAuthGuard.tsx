@@ -27,6 +27,13 @@ export function PublicAuthGuard({
         await new Promise(resolve => setTimeout(resolve, 100));
 
         const authUseCase = getDefaultAuthService();
+        
+        // Se não conseguiu inicializar o Firebase, permite acesso à página pública
+        if (!authUseCase) {
+          setIsUnauthenticated(true);
+          return;
+        }
+
         const user = await authUseCase.getCurrentUserAsync();
 
         if (user) {

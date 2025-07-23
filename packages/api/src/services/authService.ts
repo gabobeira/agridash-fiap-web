@@ -14,7 +14,13 @@ export function createAuthService(firebaseConfig: {
 }
 
 // Factory function para criar a instância padrão
-export function getDefaultAuthService() {
+export function getDefaultAuthService(): AuthUseCase | undefined {
+  // Verifica se estamos no ambiente do servidor durante o build
+  if (typeof window === 'undefined' && process.env.NODE_ENV === undefined) {
+    // Retorna undefined durante o build para evitar erros
+    return undefined;
+  }
+
   const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -23,6 +29,12 @@ export function getDefaultAuthService() {
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   };
+
+  // Verifica se todas as variáveis necessárias estão definidas
+  if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
+    console.warn('Firebase configuration is incomplete, returning undefined');
+    return undefined;
+  }
 
   return createAuthService(firebaseConfig);
 }

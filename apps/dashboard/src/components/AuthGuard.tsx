@@ -29,6 +29,13 @@ export function AuthGuard({
         await new Promise(resolve => setTimeout(resolve, 100));
 
         const authUseCase = getDefaultAuthService();
+        
+        // Se não conseguiu inicializar o Firebase, não faz verificação de auth
+        if (!authUseCase) {
+          setIsAuthenticated(true);
+          return;
+        }
+
         const user = await authUseCase.getCurrentUserAsync();
 
         if (!user) {
