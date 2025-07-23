@@ -1,7 +1,17 @@
+'use client';
+
 import { DashboardMain } from '@/components/DashboardMain';
 import { FTable } from '@repo/ui';
+import { useEffect } from 'react';
+import { useTransactions } from '../../services/useTransactions';
 
 export default function TransactionsDashboard() {
+  const { transactions, loading, error, fetchTransactions } = useTransactions();
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
+
   return (
     <DashboardMain
       title="Transações"
@@ -10,31 +20,20 @@ export default function TransactionsDashboard() {
       <FTable
         title="Tabela de Transações"
         headers={[
-          { key: 'name', label: 'Nome' },
-          { key: 'email', label: 'Email' },
-          { key: 'age', label: 'Idade' },
+          { key: 'cooperado', label: 'Cooperado' },
+          { key: 'produto', label: 'Produto' },
+          { key: 'quantidade', label: 'Quantidade' },
+          { key: 'valor', label: 'Valor' },
+          { key: 'data', label: 'Data' },
         ]}
-        data={[
-          {
-            id: '1',
-            name: 'João Silva',
-            email: 'joao@email.com',
-            age: 30,
-          },
-          {
-            id: '2',
-            name: 'Maria Santos',
-            email: 'maria@email.com',
-            age: 25,
-          },
-          {
-            id: '3',
-            name: 'Pedro Costa',
-            email: 'pedro@email.com',
-            age: 35,
-          },
-        ]}
+        data={transactions.map((t, idx) => ({
+          id: idx,
+          ...t,
+          data: t.data instanceof Date ? t.data.toLocaleDateString() : t.data,
+        }))}
       />
+      {loading && <p>Carregando...</p>}
+      {error && <p style={{ color: 'red' }}>Erro: {error.message}</p>}
     </DashboardMain>
   );
 }

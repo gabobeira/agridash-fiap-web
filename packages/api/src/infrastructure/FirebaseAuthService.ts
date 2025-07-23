@@ -1,3 +1,14 @@
+// Função utilitária para ler o cookie de sessão
+function getSessionToken(): string | null {
+  if (typeof document === 'undefined') return null;
+  return (
+    document.cookie
+      .split('; ')
+      .find(row => row.startsWith('session_token='))
+      ?.split('=')[1] || null
+  );
+}
+
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
 import {
   createUserWithEmailAndPassword,
@@ -9,17 +20,6 @@ import {
 } from 'firebase/auth';
 import { AuthService } from '../domain/AuthService';
 import { AuthUser } from '../domain/AuthUser';
-
-// Função utilitária para ler o cookie de sessão
-function getSessionToken(): string | null {
-  if (typeof document === 'undefined') return null;
-  return (
-    document.cookie
-      .split('; ')
-      .find(row => row.startsWith('session_token='))
-      ?.split('=')[1] || null
-  );
-}
 
 export class FirebaseAuthService implements AuthService {
   private app: FirebaseApp;

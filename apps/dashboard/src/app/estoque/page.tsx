@@ -1,7 +1,17 @@
+'use client';
+
 import { DashboardMain } from '@/components/DashboardMain';
 import { FTable } from '@repo/ui';
+import { useEffect } from 'react';
+import { useStocks } from '../../services/useStocks';
 
 export default function StockDashboard() {
+  const { stocks, loading, error, fetchStocks } = useStocks();
+
+  useEffect(() => {
+    fetchStocks();
+  }, [fetchStocks]);
+
   return (
     <DashboardMain
       title="Estoque"
@@ -10,31 +20,21 @@ export default function StockDashboard() {
       <FTable
         title="Tabela de Estoque"
         headers={[
-          { key: 'name', label: 'Nome' },
-          { key: 'quantity', label: 'Quantidade' },
-          { key: 'price', label: 'Preço' },
+          { key: 'nome_produto', label: 'Produto' },
+          { key: 'quantidade_estoque', label: 'Quantidade' },
+          { key: 'unidade_medida', label: 'Unidade' },
+          { key: 'capacidade_estoque', label: 'Capacidade' },
+          { key: 'status_estoque', label: 'Status' },
+          { key: 'valor_unitario_producao', label: 'Valor Produção' },
+          { key: 'valor_unitario_venda', label: 'Valor Venda' },
         ]}
-        data={[
-          {
-            id: '1',
-            name: 'Produto A',
-            quantity: 100,
-            price: 10.0,
-          },
-          {
-            id: '2',
-            name: 'Produto B',
-            quantity: 200,
-            price: 20.0,
-          },
-          {
-            id: '3',
-            name: 'Produto C',
-            quantity: 300,
-            price: 30.0,
-          },
-        ]}
+        data={stocks.map((s, idx) => ({
+          id: idx,
+          ...s,
+        }))}
       />
+      {loading && <p>Carregando...</p>}
+      {error && <p style={{ color: 'red' }}>Erro: {error.message}</p>}
     </DashboardMain>
   );
 }

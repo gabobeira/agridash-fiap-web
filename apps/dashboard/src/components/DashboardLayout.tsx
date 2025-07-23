@@ -54,10 +54,6 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
-  const token = document.cookie;
-
-  console.log(token);
-
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -79,14 +75,12 @@ export default function DashboardLayout({
   );
 
   const handleLogout = async () => {
-    console.log('vai sair');
-
     await authUseCase.signOut();
     window.location.href = '/login';
   };
 
   if (!mounted) {
-    return null; // Prevents hydration mismatch
+    return null;
   }
 
   return (
