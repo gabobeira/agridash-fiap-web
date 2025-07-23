@@ -1,6 +1,6 @@
 'use client';
 import { AuthLayout } from '@/components/AuthLayout';
-import { useSignUp } from '@/services/useSignUp';
+import { getDefaultAuthService, useSignUp } from '@agridash/api';
 import {
   Anchor,
   Button,
@@ -12,7 +12,8 @@ import {
 import { useState } from 'react';
 
 const CadastroForm = () => {
-  const { signUp, loading, error } = useSignUp();
+  const authUseCase = getDefaultAuthService();
+  const { signUp, loading, error } = useSignUp(authUseCase);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

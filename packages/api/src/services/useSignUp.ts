@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { authUseCase } from './authService';
+import { AuthUseCase } from '../application/AuthUseCase';
 
-export function useSignUp() {
+export function useSignUp(authUseCase: AuthUseCase) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -11,8 +11,10 @@ export function useSignUp() {
     try {
       const user = await authUseCase.signUp(email, password, displayName);
       return user;
-    } catch (err: any) {
-      setError(err.message || 'Erro ao cadastrar');
+    } catch (err: unknown) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Erro ao cadastrar';
+      setError(errorMessage);
       return null;
     } finally {
       setLoading(false);

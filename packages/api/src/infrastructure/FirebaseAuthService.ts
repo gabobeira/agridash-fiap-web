@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   signOut as fbSignOut,
   getAuth,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   updateProfile,
   User,
@@ -10,20 +11,11 @@ import {
 import { AuthService } from '../domain/AuthService';
 import { AuthUser } from '../domain/AuthUser';
 
-// Função utilitária para ler o cookie de sessão
-function getSessionToken(): string | null {
-  if (typeof document === 'undefined') return null;
-  return (
-    document.cookie
-      .split('; ')
-      .find(row => row.startsWith('session_token='))
-      ?.split('=')[1] || null
-  );
-}
-
 export class FirebaseAuthService implements AuthService {
-  private app: FirebaseApp;
-  private auth;
+  private readonly app: FirebaseApp;
+  private readonly auth;
+  private currentUserCache: AuthUser | null = null;
+  private authStateInitialized: boolean = false;
 
   constructor(firebaseConfig: object) {
     if (!getApps().length) {
@@ -32,17 +24,31 @@ export class FirebaseAuthService implements AuthService {
       this.app = getApps()[0];
     }
     this.auth = getAuth(this.app);
+
+    onAuthStateChanged(this.auth, user => {
+      this.currentUserCache = user ? this.mapUser(user) : null;
+
+      if (!this.authStateInitialized) {
+        this.authStateInitialized = true;
+      }
+    });
   }
 
   async signIn(email: string, password: string): Promise<AuthUser> {
-    const result = await signInWithEmailAndPassword(this.auth, email, password);
-    // Obter o token da sessão do usuário
-    const token = await result.user.getIdToken();
-    // Criar cookie de sessão (válido para ambiente browser)
-    if (typeof window !== 'undefined') {
-      document.cookie = `session_token=${token}; path=/; secure; samesite=strict`;
+    try {
+      const result = await signInWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+
+      const authUser = this.mapUser(result.user);
+      this.currentUserCache = authUser;
+      return authUser;
+    } catch (error) {
+      console.error('Erro no login:', error);
+      throw error;
     }
-    return this.mapUser(result.user);
   }
 
   async signUp(
@@ -50,32 +56,61 @@ export class FirebaseAuthService implements AuthService {
     password: string,
     displayName?: string
   ): Promise<AuthUser> {
-    const result = await createUserWithEmailAndPassword(
-      this.auth,
-      email,
-      password
-    );
-    if (displayName) {
-      await updateProfile(result.user, { displayName });
+    try {
+      const result = await createUserWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+
+      if (displayName) {
+        await updateProfile(result.user, { displayName });
+      }
+
+      const authUser = this.mapUser(result.user);
+      this.currentUserCache = authUser;
+      return authUser;
+    } catch (error) {
+      console.error('Erro no cadastro:', error);
+      throw error;
     }
-    return this.mapUser(result.user);
   }
 
   async signOut(): Promise<void> {
-    await fbSignOut(this.auth);
-    // Remove o cookie de sessão
-    if (typeof window !== 'undefined') {
-      document.cookie =
-        'session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    try {
+      await fbSignOut(this.auth);
+      this.currentUserCache = null;
+    } catch (error) {
+      console.error('Erro no logout:', error);
+      throw error;
     }
   }
 
   getCurrentUser(): AuthUser | null {
-    // Valida se existe o cookie de sessão
-    const sessionToken = getSessionToken();
-    if (!sessionToken) return null;
-    const user = this.auth.currentUser;
-    return user ? this.mapUser(user) : null;
+    if (!this.authStateInitialized) {
+      return null;
+    }
+
+    return this.currentUserCache;
+  }
+
+  async getCurrentUserAsync(): Promise<AuthUser | null> {
+    if (this.authStateInitialized) {
+      return this.getCurrentUser();
+    }
+
+    return new Promise(resolve => {
+      const unsubscribe = onAuthStateChanged(this.auth, user => {
+        if (this.authStateInitialized) {
+          unsubscribe();
+          resolve(this.getCurrentUser());
+        }
+      });
+    });
+  }
+
+  isAuthStateInitialized(): boolean {
+    return this.authStateInitialized;
   }
 
   private mapUser(user: User): AuthUser {

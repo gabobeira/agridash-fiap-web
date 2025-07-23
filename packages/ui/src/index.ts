@@ -19,7 +19,7 @@ export type { FDataRow, FDataTableProps } from './components/FDataTable';
 export { default as FTable } from './components/FTable';
 export type { FTableHeader, FTableProps } from './components/FTable';
 
-export { default as FLoaderFullScreen } from './components/FLoaderFullScreen';
+export { default as FLoadingOverlay } from './components/FLoadingOverlay';
 
 export { default as FAreaChart } from './components/FAreaChart';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { AuthLayout } from '@/components/AuthLayout';
-import { useLogin } from '@/services/useLogin';
+import { getDefaultAuthService, useSignIn } from '@agridash/api';
 import {
   Anchor,
   Button,
@@ -14,13 +14,14 @@ import {
 import { useState } from 'react';
 
 const LoginForm = () => {
-  const { login, loading, error } = useLogin();
+  const authUseCase = getDefaultAuthService();
+  const { signIn, loading, error } = useSignIn(authUseCase);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const user = await login(email, password);
+    const user = await signIn(email, password);
 
     if (user) {
       window.location.href = '/dashboard';
