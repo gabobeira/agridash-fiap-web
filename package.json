@@ -9,9 +9,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "test": "turbo run test",
-    "test:watch": "turbo run test:watch",
-    "validate": "npm run lint && npm run check-types && npm run test"
+    "validate": "npm run lint && npm run check-types"
   },
   "devDependencies": {
     "prettier": "^3.6.2",

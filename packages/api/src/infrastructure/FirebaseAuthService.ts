@@ -100,7 +100,7 @@ export class FirebaseAuthService implements AuthService {
     }
 
     return new Promise(resolve => {
-      const unsubscribe = onAuthStateChanged(this.auth, user => {
+      const unsubscribe = onAuthStateChanged(this.auth, () => {
         if (this.authStateInitialized) {
           unsubscribe();
           resolve(this.getCurrentUser());

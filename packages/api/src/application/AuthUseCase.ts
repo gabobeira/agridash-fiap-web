@@ -1,5 +1,6 @@
 import { AuthService } from '../domain/AuthService';
 import { AuthUser } from '../domain/AuthUser';
+import { FirebaseAuthService } from '../infrastructure/FirebaseAuthService';
 
 export class AuthUseCase {
   constructor(private authService: AuthService) {}
@@ -27,7 +28,7 @@ export class AuthUseCase {
   async getCurrentUserAsync(): Promise<AuthUser | null> {
     // Verifica se o FirebaseAuthService tem o método getCurrentUserAsync
     if ('getCurrentUserAsync' in this.authService) {
-      return (this.authService as any).getCurrentUserAsync();
+      return (this.authService as FirebaseAuthService).getCurrentUserAsync();
     }
     // Fallback para getCurrentUser se não tiver o método async
     return this.authService.getCurrentUser();
