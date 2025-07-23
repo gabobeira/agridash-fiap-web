@@ -1,14 +1,14 @@
 import { Transaction } from '../domain/Transaction';
-import { TransactionService } from '../domain/TransactionService';
+import { TransactionRepository } from '../domain/TransactionRepository';
 
 export class TransactionUseCase {
-  constructor(private transactionService: TransactionService) {}
+  constructor(private transactionRepository: TransactionRepository) {}
 
   async createTransaction(transaction: Transaction): Promise<Transaction> {
-    return this.transactionService.createTransaction(transaction);
+    return this.transactionRepository.createTransaction(transaction);
   }
 
   async getTransactions(): Promise<Transaction[]> {
-    return this.transactionService.getTransactions();
+    return this.transactionRepository.getTransactions();
   }
 }

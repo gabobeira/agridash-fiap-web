@@ -1,9 +1,9 @@
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
 import { addDoc, collection, getDocs, getFirestore } from 'firebase/firestore';
 import { Transaction } from '../domain/Transaction';
-import { TransactionService } from '../domain/TransactionService';
+import { TransactionRepository } from '../domain/TransactionRepository';
 
-export class FirebaseTransactionService implements TransactionService {
+export class FirebaseTransactionRepository implements TransactionRepository {
   private db;
 
   constructor(firebaseConfig: object) {

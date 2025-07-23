@@ -1,9 +1,9 @@
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
 import { addDoc, collection, getDocs, getFirestore } from 'firebase/firestore';
 import { Stock } from '../domain/Stock';
-import { StockService } from '../domain/StockService';
+import { StockRepository } from '../domain/StockRepository';
 
-export class FirebaseStockService implements StockService {
+export class FirebaseStockRepository implements StockRepository {
   private db;
 
   constructor(firebaseConfig: object) {

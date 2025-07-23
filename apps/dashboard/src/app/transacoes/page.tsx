@@ -1,9 +1,9 @@
 'use client';
 
 import { DashboardMain } from '@/components/DashboardMain';
-import { FTable } from '@repo/ui';
+import { useTransactions } from '@agridash/api';
+import { FLoadingOverlay, FTable } from '@repo/ui';
 import { useEffect } from 'react';
-import { useTransactions } from '../../services/useTransactions';
 
 export default function TransactionsDashboard() {
   const { transactions, loading, error, fetchTransactions } = useTransactions();
@@ -11,6 +11,10 @@ export default function TransactionsDashboard() {
   useEffect(() => {
     fetchTransactions();
   }, [fetchTransactions]);
+
+  if (loading) {
+    return <FLoadingOverlay />;
+  }
 
   return (
     <DashboardMain
@@ -32,8 +36,6 @@ export default function TransactionsDashboard() {
           data: t.data instanceof Date ? t.data.toLocaleDateString() : t.data,
         }))}
       />
-      {loading && <p>Carregando...</p>}
-      {error && <p style={{ color: 'red' }}>Erro: {error.message}</p>}
     </DashboardMain>
   );
 }

@@ -1,5 +1,6 @@
+import { notifications } from '@mantine/notifications';
 import { useCallback, useState } from 'react';
-import { Stock } from '../../../../packages/api/src/domain/Stock';
+import { Stock } from '../domain/Stock';
 import { stockService } from './stockService';
 
 export function useStocks() {
@@ -14,7 +15,14 @@ export function useStocks() {
       const data = await stockService.getStocks();
       setStocks(data);
     } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Erro desconhecido';
       setError(err as Error);
+      notifications.show({
+        title: 'Erro ao carregar produtos',
+        message: errorMessage,
+        color: 'red',
+      });
     } finally {
       setLoading(false);
     }
@@ -28,7 +36,14 @@ export function useStocks() {
         await stockService.createStock(stock);
         await fetchStocks();
       } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Erro desconhecido';
         setError(err as Error);
+        notifications.show({
+          title: 'Erro ao cadastrar produto',
+          message: errorMessage,
+          color: 'red',
+        });
       } finally {
         setLoading(false);
       }

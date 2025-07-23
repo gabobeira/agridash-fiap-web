@@ -1,5 +1,6 @@
+import { notifications } from '@mantine/notifications';
 import { useCallback, useState } from 'react';
-import { Transaction } from '../../../../packages/api/src/domain/Transaction';
+import { Transaction } from '../domain/Transaction';
 import { transactionService } from './transactionService';
 
 export function useTransactions() {
@@ -14,7 +15,14 @@ export function useTransactions() {
       const data = await transactionService.getTransactions();
       setTransactions(data);
     } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Erro desconhecido';
       setError(err as Error);
+      notifications.show({
+        title: 'Erro ao carregar transações',
+        message: errorMessage,
+        color: 'red',
+      });
     } finally {
       setLoading(false);
     }
@@ -28,7 +36,14 @@ export function useTransactions() {
         await transactionService.createTransaction(transaction);
         await fetchTransactions();
       } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Erro desconhecido';
         setError(err as Error);
+        notifications.show({
+          title: 'Erro ao cadastrar transação',
+          message: errorMessage,
+          color: 'red',
+        });
       } finally {
         setLoading(false);
       }

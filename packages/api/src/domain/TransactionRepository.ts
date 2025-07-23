@@ -1,6 +1,6 @@
 import { Transaction } from './Transaction';
 
-export interface TransactionService {
+export interface TransactionRepository {
   createTransaction(transaction: Transaction): Promise<Transaction>;
   getTransactions(): Promise<Transaction[]>;
 }

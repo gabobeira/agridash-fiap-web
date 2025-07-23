@@ -1,9 +1,9 @@
 'use client';
 
 import { DashboardMain } from '@/components/DashboardMain';
+import { useStocks } from '@agridash/api';
 import { FTable } from '@repo/ui';
 import { useEffect } from 'react';
-import { useStocks } from '../../services/useStocks';
 
 export default function StockDashboard() {
   const { stocks, loading, error, fetchStocks } = useStocks();

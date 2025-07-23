@@ -1,5 +1,5 @@
 import { AuthUseCase } from '../application/AuthUseCase';
-import { FirebaseAuthService } from '../infrastructure/FirebaseAuthService';
+import { FirebaseAuthRepository } from '../infrastructure/FirebaseAuthRepository';
 
 export function createAuthService(firebaseConfig: {
   apiKey: string | undefined;
@@ -9,15 +9,11 @@ export function createAuthService(firebaseConfig: {
   messagingSenderId: string | undefined;
   appId: string | undefined;
 }) {
-  const firebaseAuthService = new FirebaseAuthService(firebaseConfig);
-  return new AuthUseCase(firebaseAuthService);
+  const firebaseAuthRepository = new FirebaseAuthRepository(firebaseConfig);
+  return new AuthUseCase(firebaseAuthRepository);
 }
-
-// Factory function para criar a instância padrão
 export function getDefaultAuthService(): AuthUseCase | undefined {
-  // Verifica se estamos no ambiente do servidor durante o build
   if (typeof window === 'undefined' && process.env.NODE_ENV === undefined) {
-    // Retorna undefined durante o build para evitar erros
     return undefined;
   }
 
@@ -30,8 +26,11 @@ export function getDefaultAuthService(): AuthUseCase | undefined {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
   };
 
-  // Verifica se todas as variáveis necessárias estão definidas
-  if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
+  if (
+    !firebaseConfig.apiKey ||
+    !firebaseConfig.authDomain ||
+    !firebaseConfig.projectId
+  ) {
     console.warn('Firebase configuration is incomplete, returning undefined');
     return undefined;
   }

@@ -1,4 +1,4 @@
-import { FirebaseTransactionService } from '../../../../packages/api/src/infrastructure/FirebaseTransactionService';
+import { FirebaseStockRepository } from '../infrastructure/FirebaseStockRepository';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -9,6 +9,4 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-export const transactionService = new FirebaseTransactionService(
-  firebaseConfig
-);
+export const stockService = new FirebaseStockRepository(firebaseConfig);
