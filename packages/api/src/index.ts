@@ -1,5 +1,12 @@
-export * from './interfaces';
+// Services
 export * from './services/authService';
-export * from './services/useSignIn';
-export * from './services/useSignOut';
-export * from './services/useSignUp';
+
+// Domain exports
+export * from './domain/AuthService';
+export { type AuthUser } from './domain/AuthUser';
+
+// Application exports
+export { AuthUseCase } from './application/AuthUseCase';
+
+// Infrastructure exports
+export { FirebaseAuthService } from './infrastructure/FirebaseAuthService';

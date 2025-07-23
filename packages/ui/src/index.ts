@@ -2,6 +2,8 @@
 export { default as MantineProvider } from './providers/MantineProvider';
 export type { MantineProviderProps } from './providers/MantineProvider';
 
+export { AuthProvider, useAuth } from './providers/AuthProvider';
+
 // Theme
 export { theme } from './theme';
 
@@ -20,6 +22,8 @@ export { default as FTable } from './components/FTable';
 export type { FTableHeader, FTableProps } from './components/FTable';
 
 export { default as FLoadingOverlay } from './components/FLoadingOverlay';
+
+export { AuthGuard } from './components/AuthGuard';
 
 export { default as FAreaChart } from './components/FAreaChart';
 

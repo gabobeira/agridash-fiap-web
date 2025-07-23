@@ -113,6 +113,13 @@ export class FirebaseAuthService implements AuthService {
     return this.authStateInitialized;
   }
 
+  onAuthStateChanged(callback: (user: AuthUser | null) => void): () => void {
+    return onAuthStateChanged(this.auth, user => {
+      const authUser = user ? this.mapUser(user) : null;
+      callback(authUser);
+    });
+  }
+
   private mapUser(user: User): AuthUser {
     return {
       uid: user.uid,

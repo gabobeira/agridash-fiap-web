@@ -1,35 +1,45 @@
 'use client';
 import { AuthLayout } from '@/components/AuthLayout';
-import { PublicAuthGuard } from '@/components/PublicAuthGuard';
-import { getDefaultAuthService, useSignUp } from '@agridash/api';
+import { PublicPageWrapper } from '@/components/PublicPageWrapper';
 import {
   Anchor,
   Button,
   Group,
   PasswordInput,
   Stack,
+  Text,
   TextInput,
 } from '@mantine/core';
+import { useAuth } from '@repo/ui';
 import { useState } from 'react';
 
 const CadastroForm = () => {
-  const authUseCase = getDefaultAuthService();
-  const { signUp, loading, error } = useSignUp(authUseCase);
+  const { signUp, isLoading } = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSuccess(false);
+    setError(null);
+
     if (password !== confirmPassword) {
-      alert('As senhas não coincidem');
+      setError('As senhas não coincidem');
       return;
     }
-    const user = await signUp(email, password, name);
-    if (user) setSuccess(true);
+
+    try {
+      await signUp(email, password, name);
+      setSuccess(true);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Erro ao criar conta';
+      setError(errorMessage);
+    }
   }
 
   return (
@@ -66,9 +76,22 @@ const CadastroForm = () => {
             onChange={e => setConfirmPassword(e.target.value)}
           />
         </Stack>
-        {error && <span style={{ color: 'red' }}>{error}</span>}
-        {success && <span style={{ color: 'green' }}>Cadastro realizado!</span>}
-        <Button fullWidth type="submit" loading={loading} disabled={loading}>
+        {error && (
+          <Text c="red" fz="sm">
+            {error}
+          </Text>
+        )}
+        {success && (
+          <Text c="green" fz="sm">
+            Cadastro realizado!
+          </Text>
+        )}
+        <Button
+          fullWidth
+          type="submit"
+          loading={isLoading}
+          disabled={isLoading}
+        >
           Cadastrar
         </Button>
       </Stack>
@@ -78,7 +101,7 @@ const CadastroForm = () => {
 
 export default function CadastroPage() {
   return (
-    <PublicAuthGuard>
+    <PublicPageWrapper>
       <AuthLayout
         title="Cadastro"
         footer={
@@ -91,6 +114,6 @@ export default function CadastroPage() {
       >
         <CadastroForm />
       </AuthLayout>
-    </PublicAuthGuard>
+    </PublicPageWrapper>
   );
 }

@@ -1,7 +1,8 @@
 import './globals.css';
 
 import DashboardLayout from '@/components/DashboardLayout';
-import { FLoadingOverlay, MantineProvider } from '@repo/ui';
+import { getDefaultAuthService } from '@agridash/api';
+import { AuthProvider, FLoadingOverlay, MantineProvider } from '@repo/ui';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Suspense } from 'react';
@@ -30,15 +31,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const authService = getDefaultAuthService();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <MantineProvider>
-          <Suspense fallback={<FLoadingOverlay />}>
-            <DashboardLayout>{children}</DashboardLayout>
-          </Suspense>
+          <AuthProvider authService={authService}>
+            <Suspense fallback={<FLoadingOverlay />}>
+              <DashboardLayout>{children}</DashboardLayout>
+            </Suspense>
+          </AuthProvider>
         </MantineProvider>
       </body>
     </html>

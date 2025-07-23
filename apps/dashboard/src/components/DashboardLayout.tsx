@@ -1,7 +1,6 @@
 'use client';
 
 import { useNavbarLinks } from '@/hooks/useNavbarLinks';
-import { getDefaultAuthService, useSignOut } from '@agridash/api';
 import {
   AppShell,
   Burger,
@@ -13,10 +12,10 @@ import {
   Title,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { AuthGuard, useAuth } from '@repo/ui';
 import { IconLogout } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { AuthGuard } from './AuthGuard';
 
 export default function DashboardLayout({
   children,
@@ -27,8 +26,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
-  const authUseCase = getDefaultAuthService();
-  const { signOut, loading: signOutLoading } = useSignOut(authUseCase);
+  const { signOut, isLoading: signOutLoading } = useAuth();
 
   const navbarLinks = useNavbarLinks();
 
@@ -53,14 +51,16 @@ export default function DashboardLayout({
   );
 
   const handleLogout = async () => {
-    const success = await signOut();
-    if (success) {
+    try {
+      await signOut();
       window.location.href = `/login`;
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
     }
   };
 
   return (
-    <AuthGuard>
+    <AuthGuard enableStandaloneMode={true}>
       <AppShell
         padding="md"
         header={{ height: { base: 60, xs: 0 } }}

@@ -25,11 +25,10 @@ export class AuthUseCase {
   }
 
   async getCurrentUserAsync(): Promise<AuthUser | null> {
-    // Verifica se o FirebaseAuthService tem o método getCurrentUserAsync
-    if ('getCurrentUserAsync' in this.authService) {
-      return (this.authService as any).getCurrentUserAsync();
-    }
-    // Fallback para getCurrentUser se não tiver o método async
-    return this.authService.getCurrentUser();
+    return this.authService.getCurrentUserAsync();
+  }
+
+  onAuthStateChanged(callback: (user: AuthUser | null) => void): () => void {
+    return this.authService.onAuthStateChanged(callback);
   }
 }

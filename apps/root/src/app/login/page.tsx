@@ -1,8 +1,7 @@
 'use client';
 
 import { AuthLayout } from '@/components/AuthLayout';
-import { PublicAuthGuard } from '@/components/PublicAuthGuard';
-import { getDefaultAuthService, useSignIn } from '@agridash/api';
+import { PublicPageWrapper } from '@/components/PublicPageWrapper';
 import {
   Anchor,
   Button,
@@ -12,20 +11,26 @@ import {
   Text,
   TextInput,
 } from '@mantine/core';
+import { useAuth } from '@repo/ui';
 import { useState } from 'react';
 
 const LoginForm = () => {
-  const authUseCase = getDefaultAuthService();
-  const { signIn, loading, error } = useSignIn(authUseCase);
+  const { signIn, isLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const user = await signIn(email, password);
+    setError(null);
 
-    if (user) {
+    try {
+      await signIn(email, password);
       window.location.href = '/dashboard';
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Erro ao fazer login';
+      setError(errorMessage);
     }
   }
 
@@ -54,7 +59,12 @@ const LoginForm = () => {
             {error}
           </Text>
         ) : null}
-        <Button fullWidth type="submit" loading={loading} disabled={loading}>
+        <Button
+          fullWidth
+          type="submit"
+          loading={isLoading}
+          disabled={isLoading}
+        >
           Entrar
         </Button>
       </Stack>
@@ -64,7 +74,7 @@ const LoginForm = () => {
 
 export default function LoginPage() {
   return (
-    <PublicAuthGuard>
+    <PublicPageWrapper>
       <AuthLayout
         title="Login"
         footer={
@@ -77,6 +87,6 @@ export default function LoginPage() {
       >
         <LoginForm />
       </AuthLayout>
-    </PublicAuthGuard>
+    </PublicPageWrapper>
   );
 }
