@@ -1,6 +1,7 @@
 'use client';
 import { AuthLayout } from '@/components/AuthLayout';
-import { useSignUp } from '@/services/useSignUp';
+import { PublicAuthGuard } from '@/components/PublicAuthGuard';
+import { getDefaultAuthService, useSignUp } from '@agridash/api';
 import {
   Anchor,
   Button,
@@ -12,7 +13,8 @@ import {
 import { useState } from 'react';
 
 const CadastroForm = () => {
-  const { signUp, loading, error } = useSignUp();
+  const authUseCase = getDefaultAuthService();
+  const { signUp, loading, error } = useSignUp(authUseCase);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -76,17 +78,19 @@ const CadastroForm = () => {
 
 export default function CadastroPage() {
   return (
-    <AuthLayout
-      title="Cadastro"
-      footer={
-        <Group justify="center">
-          <Anchor href="/login" fz="sm" c="blue.6">
-            Já tem uma conta? Faça login
-          </Anchor>
-        </Group>
-      }
-    >
-      <CadastroForm />
-    </AuthLayout>
+    <PublicAuthGuard>
+      <AuthLayout
+        title="Cadastro"
+        footer={
+          <Group justify="center">
+            <Anchor href="/login" fz="sm" c="blue.6">
+              Já tem uma conta? Faça login
+            </Anchor>
+          </Group>
+        }
+      >
+        <CadastroForm />
+      </AuthLayout>
+    </PublicAuthGuard>
   );
 }

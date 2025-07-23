@@ -14,6 +14,7 @@ import {
   createUserWithEmailAndPassword,
   signOut as fbSignOut,
   getAuth,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   updateProfile,
   User,
@@ -22,27 +23,78 @@ import { AuthService } from '../domain/AuthService';
 import { AuthUser } from '../domain/AuthUser';
 
 export class FirebaseAuthService implements AuthService {
-  private app: FirebaseApp;
-  private auth;
+  private readonly app: FirebaseApp | null;
+  private readonly auth;
+  private currentUserCache: AuthUser | null = null;
+  private authStateInitialized: boolean = false;
 
   constructor(firebaseConfig: object) {
-    if (!getApps().length) {
-      this.app = initializeApp(firebaseConfig);
-    } else {
-      this.app = getApps()[0];
+    // Verifica se estamos no ambiente do servidor durante o build
+    if (typeof window === 'undefined' && !process.env.NODE_ENV) {
+      this.app = null;
+      this.auth = null;
+      return;
     }
-    this.auth = getAuth(this.app);
+
+    // Verifica se a configuração é válida
+    if (!this.isValidConfig(firebaseConfig)) {
+      console.warn('Invalid Firebase configuration, Firebase will not be initialized');
+      this.app = null;
+      this.auth = null;
+      return;
+    }
+
+    try {
+      if (!getApps().length) {
+        this.app = initializeApp(firebaseConfig);
+      } else {
+        this.app = getApps()[0];
+      }
+      this.auth = getAuth(this.app);
+
+      onAuthStateChanged(this.auth, user => {
+        this.currentUserCache = user ? this.mapUser(user) : null;
+
+        if (!this.authStateInitialized) {
+          this.authStateInitialized = true;
+        }
+      });
+    } catch (error) {
+      console.error('Failed to initialize Firebase:', error);
+      this.app = null;
+      this.auth = null;
+    }
+  }
+
+  private isValidConfig(config: unknown): boolean {
+    const firebaseConfig = config as Record<string, unknown>;
+    return !!(firebaseConfig?.apiKey && 
+           firebaseConfig?.authDomain && 
+           firebaseConfig?.projectId &&
+           firebaseConfig.apiKey !== 'undefined' &&
+           firebaseConfig.authDomain !== 'undefined' &&
+           firebaseConfig.projectId !== 'undefined');
   }
 
   async signIn(email: string, password: string): Promise<AuthUser> {
-    const result = await signInWithEmailAndPassword(this.auth, email, password);
-    // Obter o token da sessão do usuário
-    const token = await result.user.getIdToken();
-    // Criar cookie de sessão (válido para ambiente browser)
-    if (typeof window !== 'undefined') {
-      document.cookie = `session_token=${token}; path=/; secure; samesite=strict`;
+    if (!this.auth) {
+      throw new Error('Firebase not initialized');
     }
-    return this.mapUser(result.user);
+
+    try {
+      const result = await signInWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+
+      const authUser = this.mapUser(result.user);
+      this.currentUserCache = authUser;
+      return authUser;
+    } catch (error) {
+      console.error('Erro no login:', error);
+      throw error;
+    }
   }
 
   async signUp(
@@ -50,32 +102,73 @@ export class FirebaseAuthService implements AuthService {
     password: string,
     displayName?: string
   ): Promise<AuthUser> {
-    const result = await createUserWithEmailAndPassword(
-      this.auth,
-      email,
-      password
-    );
-    if (displayName) {
-      await updateProfile(result.user, { displayName });
+    if (!this.auth) {
+      throw new Error('Firebase not initialized');
     }
-    return this.mapUser(result.user);
+
+    try {
+      const result = await createUserWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+
+      if (displayName) {
+        await updateProfile(result.user, { displayName });
+      }
+
+      const authUser = this.mapUser(result.user);
+      this.currentUserCache = authUser;
+      return authUser;
+    } catch (error) {
+      console.error('Erro no cadastro:', error);
+      throw error;
+    }
   }
 
   async signOut(): Promise<void> {
-    await fbSignOut(this.auth);
-    // Remove o cookie de sessão
-    if (typeof window !== 'undefined') {
-      document.cookie =
-        'session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    if (!this.auth) {
+      throw new Error('Firebase not initialized');
+    }
+
+    try {
+      await fbSignOut(this.auth);
+      this.currentUserCache = null;
+    } catch (error) {
+      console.error('Erro no logout:', error);
+      throw error;
     }
   }
 
   getCurrentUser(): AuthUser | null {
-    // Valida se existe o cookie de sessão
-    const sessionToken = getSessionToken();
-    if (!sessionToken) return null;
-    const user = this.auth.currentUser;
-    return user ? this.mapUser(user) : null;
+    if (!this.authStateInitialized) {
+      return null;
+    }
+
+    return this.currentUserCache;
+  }
+
+  async getCurrentUserAsync(): Promise<AuthUser | null> {
+    if (!this.auth) {
+      return null;
+    }
+
+    if (this.authStateInitialized) {
+      return this.getCurrentUser();
+    }
+
+    return new Promise(resolve => {
+      const unsubscribe = onAuthStateChanged(this.auth!, () => {
+        if (this.authStateInitialized) {
+          unsubscribe();
+          resolve(this.getCurrentUser());
+        }
+      });
+    });
+  }
+
+  isAuthStateInitialized(): boolean {
+    return this.authStateInitialized;
   }
 
   private mapUser(user: User): AuthUser {
