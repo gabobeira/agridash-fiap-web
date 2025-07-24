@@ -2,11 +2,13 @@ import './globals.css';
 
 import DashboardLayout from '@/components/DashboardLayout';
 import { Notifications } from '@mantine/notifications';
-import '@mantine/notifications/styles.css';
 import { FLoadingOverlay, MantineProvider } from '@repo/ui';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Suspense } from 'react';
+
+import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

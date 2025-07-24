@@ -1,6 +1,10 @@
+'use client';
+
 import { DashboardMain } from '@/components/DashboardMain';
-import { Grid, GridCol } from '@mantine/core';
+import { Grid, GridCol, NativeSelect } from '@mantine/core';
+import { DateInput } from '@mantine/dates';
 import { FAreaChart, FBarChart, FCard } from '@repo/ui';
+import { useState } from 'react';
 
 const data = [
   {
@@ -45,11 +49,51 @@ const data2 = [
 ];
 
 export default function HomeDashboard() {
+  const [product, setProduct] = useState('');
+  const [member, setMember] = useState('');
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
+
   return (
     <DashboardMain
       title="Visão geral"
       subtitle="Microfrontend independente com componentes compartilhados"
     >
+      <Grid mb="xl">
+        <GridCol span={{ base: 12, md: 3 }}>
+          <NativeSelect
+            value={product}
+            onChange={event => setProduct(event.currentTarget.value)}
+            label="Produto"
+            data={['React', 'Angular', 'Svelte', 'Vue']}
+          />
+        </GridCol>
+        <GridCol span={{ base: 12, md: 3 }}>
+          <NativeSelect
+            value={member}
+            onChange={event => setMember(event.currentTarget.value)}
+            label="Cooperado"
+            data={['React', 'Angular', 'Svelte', 'Vue']}
+          />
+        </GridCol>
+        <GridCol span={{ base: 12, md: 3 }}>
+          <DateInput
+            value={startDate}
+            onChange={setStartDate}
+            label="Data de início"
+            placeholder="Data de início"
+          />
+        </GridCol>
+        <GridCol span={{ base: 12, md: 3 }}>
+          <DateInput
+            value={endDate}
+            onChange={setEndDate}
+            label="Data de término"
+            placeholder="Data de término"
+          />
+        </GridCol>
+      </Grid>
+
       <Grid justify="space-between" align="stretch" mb="xl">
         <GridCol span={{ base: 12, md: 4 }}>
           <FCard
