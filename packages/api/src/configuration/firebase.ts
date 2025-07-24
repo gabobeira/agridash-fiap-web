@@ -1,8 +1,9 @@
 export const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: 'AIzaSyCxJCibt_ooE3tN9nVjPYYSWdVS8AZrd0E',
+  authDomain: 'control-farm-web-fiap.firebaseapp.com',
+  projectId: 'control-farm-web-fiap',
+  storageBucket: 'control-farm-web-fiap.firebasestorage.app',
+  messagingSenderId: '97027004548',
+  appId: '1:97027004548:web:6bc37205b1126c9f978ad1',
+  measurementId: 'G-DPB3S4CNDY',
 };
