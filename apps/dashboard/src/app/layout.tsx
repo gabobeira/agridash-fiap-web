@@ -1,6 +1,8 @@
 import './globals.css';
 
+import { AuthGuard } from '@/components/AuthGuard';
 import DashboardLayout from '@/components/DashboardLayout';
+import { AuthProvider } from '@agridash/api';
 import { Notifications } from '@mantine/notifications';
 import { FLoadingOverlay, MantineProvider } from '@repo/ui';
 import type { Metadata } from 'next';
@@ -41,9 +43,13 @@ export default function RootLayout({
       >
         <MantineProvider>
           <Notifications />
-          <Suspense fallback={<FLoadingOverlay />}>
-            <DashboardLayout>{children}</DashboardLayout>
-          </Suspense>
+          <AuthProvider>
+            <AuthGuard>
+              <Suspense fallback={<FLoadingOverlay />}>
+                <DashboardLayout>{children}</DashboardLayout>
+              </Suspense>
+            </AuthGuard>
+          </AuthProvider>
         </MantineProvider>
       </body>
     </html>
