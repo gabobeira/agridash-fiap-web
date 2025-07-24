@@ -1,5 +1,6 @@
 export * from './application/GetSalesTableDataUseCase';
 // export * from './auth/AuthContext';
+export * from './auth/AuthProvider';
 export * from './auth/AuthStore';
 export * from './domain/Sale';
 export * from './domain/SaleRepository';

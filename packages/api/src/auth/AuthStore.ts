@@ -8,8 +8,37 @@ import {
 import { create } from 'zustand';
 import { auth } from '../configuration/firebase';
 
-// A store do Zustand combina o estado e as ações em um único objeto.
-// Não é necessário um hook `useProvideAuth` separado, a lógica pode viver aqui.
+// Função para sanitizar erros de autenticação
+const sanitizeAuthError = (error: unknown): string => {
+  const errorCode = (error as { code?: string })?.code;
+
+  // Log completo apenas no desenvolvimento
+  if (process.env.NODE_ENV === 'development') {
+    console.error('Auth Error Details:', error);
+  }
+
+  switch (errorCode) {
+    case 'auth/user-not-found':
+    case 'auth/wrong-password':
+    case 'auth/invalid-credential':
+      return 'Email ou senha incorretos';
+    case 'auth/too-many-requests':
+      return 'Muitas tentativas. Tente novamente mais tarde';
+    case 'auth/user-disabled':
+      return 'Conta desabilitada. Entre em contato com o suporte';
+    case 'auth/email-already-in-use':
+      return 'Este email já está em uso';
+    case 'auth/weak-password':
+      return 'Senha muito fraca. Use pelo menos 8 caracteres';
+    case 'auth/invalid-email':
+      return 'Email inválido';
+    case 'auth/network-request-failed':
+      return 'Erro de conexão. Verifique sua internet';
+    default:
+      return 'Erro de autenticação. Tente novamente';
+  }
+};
+
 type AuthUser = { uid: string; email: string | null } | null;
 type AuthStore = {
   user: AuthUser;
@@ -24,17 +53,17 @@ type AuthStore = {
   init: () => void;
   cleanup: () => void;
   _unsubscribe?: () => void;
+  _initialized?: boolean;
 };
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
   user: null,
-  loading: false,
+  loading: true,
   error: null,
+  _initialized: false,
 
-  // Ação para limpar erros
   clearError: () => set({ error: null }),
 
-  // Ação para cadastrar (Sign Up)
   signUp: async (email: string, password: string, name?: string) => {
     set({ loading: true, error: null });
     try {
@@ -46,53 +75,49 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       if (name) {
         await updateProfile(response.user, { displayName: name });
       }
-      // O onAuthStateChanged listener irá atualizar o estado do usuário
       return response.user;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      set({ error: errorMessage, loading: false });
+      const sanitizedError = sanitizeAuthError(err);
+      set({ error: sanitizedError, loading: false });
       return null;
     } finally {
       set({ loading: false });
     }
   },
 
-  // Ação para autenticar (Sign In)
   signIn: async (email: string, password: string) => {
     set({ loading: true, error: null });
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
-
-      // O onAuthStateChanged listener irá atualizar o estado do usuário
       return response.user;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      set({ error: errorMessage, loading: false });
+      const sanitizedError = sanitizeAuthError(err);
+      set({ error: sanitizedError, loading: false });
       return null;
     } finally {
       set({ loading: false });
     }
   },
 
-  // Ação para deslogar (Sign Out)
   signOut: async () => {
     set({ loading: true, error: null });
     try {
       await firebaseSignOut(auth);
       return true;
-      // O onAuthStateChanged listener irá limpar o usuário
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      set({ error: errorMessage, loading: false });
+      const sanitizedError = sanitizeAuthError(err);
+      set({ error: sanitizedError, loading: false });
+      return false;
     } finally {
       set({ loading: false });
     }
   },
 
-  // Método para inicializar o listener do Firebase
-  // Deve ser chamado uma vez na raiz da aplicação
   init: () => {
-    if (get()._unsubscribe) return; // Evita múltiplas inscrições
+    const state = get();
+    if (state._unsubscribe || state._initialized) return;
+
+    set({ loading: true, _initialized: true });
 
     const unsubscribe = onAuthStateChanged(auth, rawUser => {
       if (rawUser) {
@@ -109,9 +134,12 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     set({ _unsubscribe: unsubscribe });
   },
 
-  // Função para limpar o listener quando o app for fechado
   cleanup: () => {
-    const unsubscribe = get()._unsubscribe;
-    if (unsubscribe) unsubscribe();
+    const state = get();
+    const unsubscribe = state._unsubscribe;
+    if (unsubscribe) {
+      unsubscribe();
+      set({ _unsubscribe: undefined, _initialized: false });
+    }
   },
 }));

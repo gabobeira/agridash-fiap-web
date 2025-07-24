@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuthStore } from '@agridash/api';
-import { LoadingOverlay } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
 interface PublicAuthGuardProps {
@@ -12,26 +11,20 @@ interface PublicAuthGuardProps {
 
 export function PublicAuthGuard({
   children,
-  fallback,
   dashboardUrl = '/dashboard',
 }: Readonly<PublicAuthGuardProps>) {
   const [isUnauthenticated, setIsUnauthenticated] = useState<boolean | null>(
     null
   );
-  const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuthStore();
-
-  useEffect(() => {
-    useAuthStore.getState().init();
-    return () => {
-      useAuthStore.getState().cleanup();
-    };
-  }, []);
+  const { user, loading } = useAuthStore();
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        setIsLoading(true);
+        // Aguarda a inicialização do Firebase antes de verificar
+        if (loading) {
+          return;
+        }
 
         if (user) {
           window.location.href = dashboardUrl;
@@ -41,29 +34,12 @@ export function PublicAuthGuard({
         setIsUnauthenticated(true);
       } catch (error) {
         console.error('Public auth check failed:', error);
-
         setIsUnauthenticated(true);
-      } finally {
-        setIsLoading(false);
       }
     };
 
     checkAuth();
-  }, [dashboardUrl, user]);
-
-  if (isLoading || isUnauthenticated === null) {
-    return (
-      fallback || (
-        <div style={{ position: 'relative', height: '100vh' }}>
-          <LoadingOverlay
-            visible={true}
-            overlayProps={{ radius: 'sm', blur: 2 }}
-            loaderProps={{ size: 'lg', type: 'bars' }}
-          />
-        </div>
-      )
-    );
-  }
+  }, [dashboardUrl, user, loading]);
 
   return isUnauthenticated ? <>{children}</> : null;
 }

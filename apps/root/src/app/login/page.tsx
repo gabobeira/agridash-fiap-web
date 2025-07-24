@@ -1,7 +1,6 @@
 'use client';
 
 import { AuthLayout } from '@/components/AuthLayout';
-import { PublicAuthGuard } from '@/components/PublicAuthGuard';
 import { useAuthStore } from '@agridash/api';
 import {
   Anchor,
@@ -21,11 +20,7 @@ const LoginForm = () => {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const user = await signIn(email, password);
-
-    if (user) {
-      window.location.href = '/dashboard';
-    }
+    await signIn(email, password);
   }
 
   return (
@@ -63,19 +58,17 @@ const LoginForm = () => {
 
 export default function LoginPage() {
   return (
-    <PublicAuthGuard>
-      <AuthLayout
-        title="Login"
-        footer={
-          <Group justify="center">
-            <Anchor href="/cadastro" fz="sm" c="blue.6">
-              Não tem uma conta? Cadastre-se
-            </Anchor>
-          </Group>
-        }
-      >
-        <LoginForm />
-      </AuthLayout>
-    </PublicAuthGuard>
+    <AuthLayout
+      title="Login"
+      footer={
+        <Group justify="center">
+          <Anchor href="/cadastro" fz="sm" c="blue.6">
+            Não tem uma conta? Cadastre-se
+          </Anchor>
+        </Group>
+      }
+    >
+      <LoginForm />
+    </AuthLayout>
   );
 }
