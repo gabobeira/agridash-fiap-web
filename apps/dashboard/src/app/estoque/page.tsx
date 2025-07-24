@@ -1,16 +1,81 @@
 'use client';
 
 import { DashboardMain } from '@/components/DashboardMain';
-import { useStocks } from '@agridash/api';
-import { FTable } from '@repo/ui';
+import { useStockService } from '@agridash/api';
+import { Badge, Button } from '@mantine/core';
+import { FLoadingOverlay, FTable } from '@repo/ui';
+import { IconBellRinging } from '@tabler/icons-react';
 import { useEffect } from 'react';
 
 export default function StockDashboard() {
-  const { stocks, loading, error, fetchStocks } = useStocks();
+  const { stockProductsData, loading, getStockProducts } = useStockService();
+
+  console.log('stockProductsData', stockProductsData);
 
   useEffect(() => {
-    fetchStocks();
-  }, [fetchStocks]);
+    getStockProducts();
+  }, [getStockProducts]);
+
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
+
+  const handleNotification = (productId: string) => {
+    alert(`Enviando notificação para o produto ${productId}`);
+  };
+
+  const renderNotificationButton = (productId: string, enabled: boolean) => (
+    <Button
+      onClick={() => handleNotification(productId)}
+      rightSection={<IconBellRinging size={14} />}
+      variant="outline"
+      size="xs"
+      disabled={!enabled}
+      color="red.5"
+    >
+      Notificar
+    </Button>
+  );
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'BAIXO':
+        return 'red';
+      case 'MÉDIO':
+        return 'yellow';
+      case 'ALTO':
+        return 'green';
+      default:
+        return 'gray';
+    }
+  };
+
+  const renderStatusBadge = (status: string) => {
+    const color = getStatusColor(status);
+    return (
+      <Badge color={color} variant="light">
+        {status}
+      </Badge>
+    );
+  };
+
+  const stockProductsTableData = stockProductsData.map(product => ({
+    idProduto: product.idProduto,
+    nomeProduto: product.nomeProduto,
+    unidadeMedida: product.unidadeMedida,
+    valorUnitarioProducao: formatCurrency(product.valorUnitarioProducao),
+    valorUnitarioVenda: formatCurrency(product.valorUnitarioVenda),
+    quantidadeEstoque: product.quantidadeEstoque,
+    capacidadeEstoque: product.capacidadeEstoque,
+    statusEstoque: renderStatusBadge(product.statusEstoque.toUpperCase()),
+    action: renderNotificationButton(product.idProduto, product.alertaEstoque),
+  }));
+
+  if (loading) {
+    return <FLoadingOverlay />;
+  }
 
   return (
     <DashboardMain
@@ -20,21 +85,18 @@ export default function StockDashboard() {
       <FTable
         title="Tabela de Estoque"
         headers={[
-          { key: 'nome_produto', label: 'Produto' },
-          { key: 'quantidade_estoque', label: 'Quantidade' },
-          { key: 'unidade_medida', label: 'Unidade' },
-          { key: 'capacidade_estoque', label: 'Capacidade' },
-          { key: 'status_estoque', label: 'Status' },
-          { key: 'valor_unitario_producao', label: 'Valor Produção' },
-          { key: 'valor_unitario_venda', label: 'Valor Venda' },
+          { label: 'ID Produto', key: 'idProduto' },
+          { label: 'Nome Produto', key: 'nomeProduto' },
+          { label: 'Unidade', key: 'unidadeMedida' },
+          { label: 'Custo Produção (un.)', key: 'valorUnitarioProducao' },
+          { label: 'Valor Venda (un.)', key: 'valorUnitarioVenda' },
+          { label: 'Quantidade Estoque', key: 'quantidadeEstoque' },
+          { label: 'Capacidade Estoque', key: 'capacidadeEstoque' },
+          { label: 'Status', key: 'statusEstoque' },
+          { label: 'Ação', key: 'action' },
         ]}
-        data={stocks.map((s, idx) => ({
-          id: idx,
-          ...s,
-        }))}
+        data={stockProductsTableData}
       />
-      {loading && <p>Carregando...</p>}
-      {error && <p style={{ color: 'red' }}>Erro: {error.message}</p>}
     </DashboardMain>
   );
 }

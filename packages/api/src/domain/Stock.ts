@@ -1,10 +1,32 @@
-export interface Stock {
-  capacidade_estoque?: number;
-  id_produto?: string;
-  nome_produto?: string;
-  quantidade_estoque?: number;
-  status_estoque?: string;
-  unidade_medida?: string;
-  valor_unitario_producao?: number;
-  valor_unitario_venda?: number;
+export interface IStock {
+  capacidadeEstoque: number;
+  idProduto: string;
+  nomeProduto: string;
+  quantidadeEstoque: number;
+  statusEstoque: string;
+  unidadeMedida: string;
+  valorUnitarioProducao: number;
+  valorUnitarioVenda: number;
+}
+
+export class Stock implements IStock {
+  capacidadeEstoque: number;
+  idProduto: string;
+  nomeProduto: string;
+  quantidadeEstoque: number;
+  statusEstoque: string;
+  unidadeMedida: string;
+  valorUnitarioProducao: number;
+  valorUnitarioVenda: number;
+
+  constructor(data: IStock) {
+    this.capacidadeEstoque = data.capacidadeEstoque;
+    this.idProduto = data.idProduto;
+    this.nomeProduto = data.nomeProduto;
+    this.quantidadeEstoque = data.quantidadeEstoque;
+    this.statusEstoque = data.statusEstoque;
+    this.unidadeMedida = data.unidadeMedida;
+    this.valorUnitarioProducao = data.valorUnitarioProducao;
+    this.valorUnitarioVenda = data.valorUnitarioVenda;
+  }
 }
