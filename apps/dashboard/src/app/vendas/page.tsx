@@ -1,16 +1,25 @@
 'use client';
 
 import { DashboardMain } from '@/components/DashboardMain';
+import { SalesFilters } from '@/components/SalesFilters';
 import { useSalesService } from '@agridash/api';
 import { FLoadingOverlay, FTable } from '@repo/ui';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function SalesDashboard() {
-  const { salesData, loading, getSalesData } = useSalesService();
+  const { salesData, loading, getSalesData, totalPages } = useSalesService();
+  const [activePage, setActivePage] = useState(1);
+  const [appliedFilters, setAppliedFilters] = useState({});
 
-  useEffect(() => {
-    getSalesData({});
-  }, [getSalesData]);
+  const handleApplyFilters = (filters: SalesFilters) => {
+    setAppliedFilters({
+      productId: filters.productId,
+      cooperativeId: filters.cooperativeId,
+      startDate: filters.startDate ? new Date(filters.startDate) : undefined,
+      endDate: filters.endDate ? new Date(filters.endDate) : undefined,
+    });
+    setActivePage(1);
+  };
 
   const formatCurrency = (value: number) =>
     new Intl.NumberFormat('pt-BR', {
@@ -31,6 +40,10 @@ export default function SalesDashboard() {
     margemLucro: sale.margemLucro.toFixed(1) + '%',
   }));
 
+  useEffect(() => {
+    getSalesData({ page: activePage, includeCount: true, ...appliedFilters });
+  }, [activePage, appliedFilters, getSalesData]);
+
   if (loading) {
     return <FLoadingOverlay />;
   }
@@ -40,6 +53,10 @@ export default function SalesDashboard() {
       title="Vendas"
       subtitle="Microfrontend independente com componentes compartilhados"
     >
+      <SalesFilters
+        applyFilters={handleApplyFilters}
+        appliedFilters={appliedFilters}
+      />
       <FTable
         title="Tabela de Vendas"
         headers={[
@@ -54,6 +71,10 @@ export default function SalesDashboard() {
           { label: 'Margem de Lucro (%)', key: 'margemLucro' },
         ]}
         data={salesTableData}
+        activePage={activePage}
+        onChangePage={setActivePage}
+        totalPages={totalPages}
+        paginate
       />
     </DashboardMain>
   );

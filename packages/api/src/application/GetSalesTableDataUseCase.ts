@@ -1,3 +1,4 @@
+import { DocumentSnapshot } from 'firebase/firestore';
 import { SaleRepository } from '../domain/SaleRepository';
 import { StockRepository } from '../domain/StockRepository';
 
@@ -6,6 +7,10 @@ export interface GetSalesTableDataRequest {
   endDate?: Date;
   productId?: string;
   cooperativeId?: string;
+  pageSize?: number;
+  page?: number;
+  lastDoc?: DocumentSnapshot;
+  includeCount?: boolean;
 }
 
 export interface SaleData {
@@ -22,6 +27,11 @@ export interface SaleData {
 
 export interface GetSalesTableDataResponse {
   salesData: SaleData[];
+  lastDoc?: DocumentSnapshot;
+  hasMore?: boolean;
+  currentPage?: number;
+  totalPages?: number;
+  totalCount?: number;
 }
 
 export class GetSalesTableDataUseCase {
@@ -30,18 +40,11 @@ export class GetSalesTableDataUseCase {
     private readonly stockRepository: StockRepository
   ) {}
 
-  async execute({
-    startDate,
-    endDate,
-    productId,
-    cooperativeId,
-  }: GetSalesTableDataRequest): Promise<GetSalesTableDataResponse> {
-    const sales = await this.saleRepository.getSales({
-      startDate,
-      endDate,
-      productId,
-      cooperativeId,
-    });
+  async execute(
+    requestParams: GetSalesTableDataRequest
+  ): Promise<GetSalesTableDataResponse> {
+    const { sales, lastDoc, hasMore, currentPage, totalPages, totalCount } =
+      await this.saleRepository.getSales(requestParams);
     const products = await this.stockRepository.getStockProducts();
 
     const salesData: SaleData[] = sales.map(sale => {
@@ -67,6 +70,6 @@ export class GetSalesTableDataUseCase {
       };
     });
 
-    return { salesData };
+    return { salesData, lastDoc, hasMore, currentPage, totalPages, totalCount };
   }
 }

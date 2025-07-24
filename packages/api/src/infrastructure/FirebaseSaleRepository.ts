@@ -1,10 +1,14 @@
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
 import {
   collection,
+  DocumentSnapshot,
+  getCountFromServer,
   getDocs,
   getFirestore,
+  limit,
   orderBy,
   query,
+  startAfter,
   where,
 } from 'firebase/firestore';
 import { Sale } from '../domain/Sale';
@@ -30,12 +34,34 @@ export class FirebaseSaleRepository implements SaleRepository {
     endDate,
     productId,
     cooperativeId,
+    pageSize = 10,
+    page = 1,
+    lastDoc,
+    includeCount = true,
   }: {
     startDate?: Date;
     endDate?: Date;
     productId?: string;
     cooperativeId?: string;
-  }): Promise<Sale[]> {
+    pageSize?: number;
+    page?: number;
+    lastDoc?: DocumentSnapshot;
+    includeCount?: boolean;
+  }): Promise<{
+    sales: Sale[];
+    lastDoc?: DocumentSnapshot;
+    hasMore?: boolean;
+    currentPage?: number;
+    totalPages?: number;
+    totalCount?: number;
+  }> {
+    console.log('Fetching sales with params:', {
+      startDate,
+      endDate,
+      productId,
+      cooperativeId,
+    });
+
     const constraints = [];
 
     if (startDate) constraints.push(where('data', '>=', startDate));
@@ -44,11 +70,48 @@ export class FirebaseSaleRepository implements SaleRepository {
     if (cooperativeId)
       constraints.push(where('cooperado', '==', cooperativeId));
 
-    const snapshot = await getDocs(
-      query(this.collectionRef, ...constraints, orderBy('data', 'desc'))
+    let totalCount: number | undefined;
+    let totalPages: number | undefined;
+
+    if (includeCount) {
+      const countQuery = query(this.collectionRef, ...constraints);
+      const countSnapshot = await getCountFromServer(countQuery);
+      totalCount = countSnapshot.data().count;
+      totalPages = Math.ceil(totalCount / pageSize);
+    }
+
+    let queryRef = query(
+      this.collectionRef,
+      ...constraints,
+      orderBy('data', 'desc'),
+      limit(pageSize + 1)
     );
 
-    return snapshot.docs.map(doc => {
+    if (lastDoc) {
+      queryRef = query(queryRef, startAfter(lastDoc));
+    } else if (page > 1) {
+      const skipCount = (page - 1) * pageSize;
+      const skipQuery = query(
+        this.collectionRef,
+        ...constraints,
+        orderBy('data', 'desc'),
+        limit(skipCount)
+      );
+
+      const skipSnapshot = await getDocs(skipQuery);
+      const lastSkipDoc = skipSnapshot.docs[skipSnapshot.docs.length - 1];
+
+      if (lastSkipDoc) {
+        queryRef = query(queryRef, startAfter(lastSkipDoc));
+      }
+    }
+
+    const snapshot = await getDocs(queryRef);
+    const docs = snapshot.docs;
+
+    const hasMore = docs.length > pageSize;
+
+    const sales = docs.slice(0, pageSize).map(doc => {
       const data = doc.data();
       return new Sale({
         cooperado: data.cooperado,
@@ -58,5 +121,14 @@ export class FirebaseSaleRepository implements SaleRepository {
         valorVenda: data.valor,
       });
     });
+
+    return {
+      sales,
+      lastDoc: docs[pageSize - 1] || undefined,
+      hasMore,
+      currentPage: page,
+      totalPages,
+      totalCount,
+    };
   }
 }
