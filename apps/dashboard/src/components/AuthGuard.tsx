@@ -1,7 +1,7 @@
 'use client';
 
 import { useStandaloneMode } from '@/hooks/useStandaloneMode';
-import { getDefaultAuthService } from '@agridash/api';
+import { useAuthStore } from '@agridash/api';
 import { LoadingOverlay } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
@@ -18,25 +18,22 @@ export function AuthGuard({
 }: Readonly<AuthGuardProps>) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
   const isStandalone = useStandaloneMode();
+  const { user } = useAuthStore();
+
+  useEffect(() => {
+    useAuthStore.getState().init();
+    return () => {
+      useAuthStore.getState().cleanup();
+    };
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        if (isStandalone || isStandalone === null) return;
-
         setIsLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        const authUseCase = getDefaultAuthService();
-        
-        // Se não conseguiu inicializar o Firebase, não faz verificação de auth
-        if (!authUseCase) {
-          setIsAuthenticated(true);
-          return;
-        }
-
-        const user = await authUseCase.getCurrentUserAsync();
+        if (isStandalone || isStandalone === null) return;
 
         if (!user) {
           window.location.href = redirectUrl;
@@ -53,7 +50,7 @@ export function AuthGuard({
     };
 
     checkAuth();
-  }, [redirectUrl, isStandalone]);
+  }, [user, isStandalone, redirectUrl]);
 
   if (isStandalone) return <>{children}</>;
 

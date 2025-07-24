@@ -1,6 +1,9 @@
+'use client';
+
 import { DashboardMain } from '@/components/DashboardMain';
-import { Grid, GridCol } from '@mantine/core';
+import { Grid, GridCol, NativeSelect } from '@mantine/core';
 import { FAreaChart, FBarChart, FCard } from '@repo/ui';
+import { useState } from 'react';
 
 const data = [
   {
@@ -45,11 +48,18 @@ const data2 = [
 ];
 
 export default function HomeDashboard() {
+  const [value, setValue] = useState('');
+
   return (
     <DashboardMain
       title="Visão geral"
       subtitle="Microfrontend independente com componentes compartilhados"
     >
+      <NativeSelect
+        value={value}
+        onChange={event => setValue(event.currentTarget.value)}
+        data={['React', 'Angular', 'Svelte', 'Vue']}
+      />
       <Grid justify="space-between" align="stretch" mb="xl">
         <GridCol span={{ base: 12, md: 4 }}>
           <FCard

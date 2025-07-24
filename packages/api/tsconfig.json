@@ -10,7 +10,8 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "jsx": "react-jsx"
   },
   "include": ["src/**/*"]
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { getDefaultAuthService } from '@agridash/api';
+import { useAuthStore } from '@agridash/api';
 import { LoadingOverlay } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
@@ -19,22 +19,19 @@ export function PublicAuthGuard({
     null
   );
   const [isLoading, setIsLoading] = useState(true);
+  const { user } = useAuthStore();
+
+  useEffect(() => {
+    useAuthStore.getState().init();
+    return () => {
+      useAuthStore.getState().cleanup();
+    };
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
         setIsLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        const authUseCase = getDefaultAuthService();
-        
-        // Se não conseguiu inicializar o Firebase, permite acesso à página pública
-        if (!authUseCase) {
-          setIsUnauthenticated(true);
-          return;
-        }
-
-        const user = await authUseCase.getCurrentUserAsync();
 
         if (user) {
           window.location.href = dashboardUrl;
@@ -52,7 +49,7 @@ export function PublicAuthGuard({
     };
 
     checkAuth();
-  }, [dashboardUrl]);
+  }, [dashboardUrl, user]);
 
   if (isLoading || isUnauthenticated === null) {
     return (
