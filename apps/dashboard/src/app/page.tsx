@@ -1,3 +1,5 @@
+'use client';
+
 import { DashboardMain } from '@/components/DashboardMain';
 import { Grid, GridCol } from '@mantine/core';
 import { FAreaChart, FBarChart, FCard } from '@repo/ui';

@@ -10,8 +10,6 @@ import { useEffect } from 'react';
 export default function StockDashboard() {
   const { stockProductsData, loading, getStockProducts } = useStockService();
 
-  console.log('stockProductsData', stockProductsData);
-
   useEffect(() => {
     getStockProducts();
   }, [getStockProducts]);

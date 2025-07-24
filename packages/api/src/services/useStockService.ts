@@ -1,3 +1,5 @@
+'use client';
+
 import { notifications } from '@mantine/notifications';
 import { useCallback, useState } from 'react';
 import {

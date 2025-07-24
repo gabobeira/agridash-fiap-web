@@ -1,35 +1,39 @@
 'use client';
 import { AuthLayout } from '@/components/AuthLayout';
-import { PublicAuthGuard } from '@/components/PublicAuthGuard';
-import { getDefaultAuthService, useAuth } from '@agridash/api';
+import { useAuthStore } from '@agridash/api';
 import {
   Anchor,
   Button,
   Group,
   PasswordInput,
   Stack,
+  Text,
   TextInput,
 } from '@mantine/core';
 import { useState } from 'react';
 
 const CadastroForm = () => {
-  const authUseCase = getDefaultAuthService();
-  const { signUp, loading, error } = useAuth(authUseCase);
+  const { signUp, loading, error: signUpError } = useAuthStore();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSuccess(false);
+    setError(null);
     if (password !== confirmPassword) {
-      alert('As senhas não coincidem');
+      setError('As senhas não coincidem');
       return;
     }
-    const user = await signUp(email, password, name);
-    if (user) setSuccess(true);
+    try {
+      await signUp(email, password, name);
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : 'Erro ao cadastrar usuário'
+      );
+    }
   }
 
   return (
@@ -66,8 +70,11 @@ const CadastroForm = () => {
             onChange={e => setConfirmPassword(e.target.value)}
           />
         </Stack>
-        {error && <span style={{ color: 'red' }}>{error}</span>}
-        {success && <span style={{ color: 'green' }}>Cadastro realizado!</span>}
+        {signUpError || error ? (
+          <Text c="red" fz="sm">
+            {signUpError || error}
+          </Text>
+        ) : null}
         <Button fullWidth type="submit" loading={loading} disabled={loading}>
           Cadastrar
         </Button>
@@ -78,19 +85,17 @@ const CadastroForm = () => {
 
 export default function CadastroPage() {
   return (
-    <PublicAuthGuard>
-      <AuthLayout
-        title="Cadastro"
-        footer={
-          <Group justify="center">
-            <Anchor href="/login" fz="sm" c="blue.6">
-              Já tem uma conta? Faça login
-            </Anchor>
-          </Group>
-        }
-      >
-        <CadastroForm />
-      </AuthLayout>
-    </PublicAuthGuard>
+    <AuthLayout
+      title="Cadastro"
+      footer={
+        <Group justify="center">
+          <Anchor href="/login" fz="sm" c="blue.6">
+            Já tem uma conta? Faça login
+          </Anchor>
+        </Group>
+      }
+    >
+      <CadastroForm />
+    </AuthLayout>
   );
 }

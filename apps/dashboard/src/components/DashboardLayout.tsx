@@ -1,7 +1,7 @@
 'use client';
 
 import { useNavbarLinks } from '@/hooks/useNavbarLinks';
-import { getDefaultAuthService, useAuth } from '@agridash/api';
+import { useAuthStore } from '@agridash/api';
 import {
   AppShell,
   Burger,
@@ -16,7 +16,6 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconLogout } from '@tabler/icons-react';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { AuthGuard } from './AuthGuard';
 
 export default function DashboardLayout({
   children,
@@ -27,8 +26,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
-  const authUseCase = getDefaultAuthService();
-  const { signOut, loading: signOutLoading } = useAuth(authUseCase);
+  const { signOut, loading } = useAuthStore();
 
   const navbarLinks = useNavbarLinks();
 
@@ -52,69 +50,58 @@ export default function DashboardLayout({
     </Title>
   );
 
-  const handleLogout = async () => {
-    const success = await signOut();
-    if (success) {
-      window.location.href = `/login`;
-    }
-  };
-
   return (
-    <AuthGuard>
-      <AppShell
-        padding="md"
-        header={{ height: { base: 60, xs: 0 } }}
-        navbar={{
-          width: 260,
-          breakpoint: 'xs',
-          collapsed: { mobile: !opened },
-        }}
-      >
-        <AppShell.Header hiddenFrom="xs">
+    <AppShell
+      padding="md"
+      header={{ height: { base: 60, xs: 0 } }}
+      navbar={{
+        width: 260,
+        breakpoint: 'xs',
+        collapsed: { mobile: !opened },
+      }}
+    >
+      <AppShell.Header hiddenFrom="xs">
+        <Flex gap="md" align="center" justify="space-between" p="md">
+          <Burger opened={opened} onClick={toggle} size="sm" />
+          {!opened ? renderLogo() : null}
+        </Flex>
+      </AppShell.Header>
+      <AppShell.Navbar bg="neutral.0" p="md">
+        <AppShell.Section>
           <Flex gap="md" align="center" justify="space-between" p="md">
-            <Burger opened={opened} onClick={toggle} size="sm" />
-            {!opened ? renderLogo() : null}
+            {renderLogo()}
+            <Code>v1.0.0</Code>
           </Flex>
-        </AppShell.Header>
-        <AppShell.Navbar bg="neutral.0" p="md">
-          <AppShell.Section>
-            <Flex gap="md" align="center" justify="space-between" p="md">
-              {renderLogo()}
-              <Code>v1.0.0</Code>
-            </Flex>
-          </AppShell.Section>
-          <Divider />
-          <AppShell.Section grow>
-            {navbarLinks.map((link, index) => (
-              <NavLink
-                key={`link-${index}-${link.label}`}
-                label={link.label}
-                href={link.href}
-                leftSection={link.leftSection}
-                active={mounted && pathname === link.href}
-                p="md"
-                my="xs"
-                bdrs="sm"
-              />
-            ))}
-          </AppShell.Section>
-          <Divider />
-          <AppShell.Section>
+        </AppShell.Section>
+        <Divider />
+        <AppShell.Section grow>
+          {navbarLinks.map((link, index) => (
             <NavLink
-              label="Sair"
-              leftSection={
-                signOutLoading ? <Loader size="xs" /> : <IconLogout />
-              }
+              key={`link-${index}-${link.label}`}
+              label={link.label}
+              href={link.href}
+              leftSection={link.leftSection}
+              active={mounted && pathname === link.href}
               p="md"
-              mt="xs"
+              my="xs"
               bdrs="sm"
-              onClick={handleLogout}
-              disabled={signOutLoading}
             />
-          </AppShell.Section>
-        </AppShell.Navbar>
-        <AppShell.Main>{children}</AppShell.Main>
-      </AppShell>
-    </AuthGuard>
+          ))}
+        </AppShell.Section>
+        <Divider />
+        <AppShell.Section>
+          <NavLink
+            label="Sair"
+            leftSection={loading ? <Loader size="xs" /> : <IconLogout />}
+            p="md"
+            mt="xs"
+            bdrs="sm"
+            onClick={() => signOut()}
+            disabled={loading}
+          />
+        </AppShell.Section>
+      </AppShell.Navbar>
+      <AppShell.Main>{children}</AppShell.Main>
+    </AppShell>
   );
 }
