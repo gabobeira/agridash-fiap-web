@@ -2,8 +2,8 @@
 
 import {
   IconBell,
+  IconCoins,
   IconHomeStats,
-  IconSwitchHorizontal,
   IconWheat,
 } from '@tabler/icons-react';
 import { useMemo } from 'react';
@@ -22,9 +22,9 @@ export function useNavbarLinks() {
         href: isStandalone ? '/' : `${basePath}`,
       },
       {
-        leftSection: <IconSwitchHorizontal />,
-        label: 'Transações',
-        href: `${basePath}/transacoes`,
+        leftSection: <IconCoins />,
+        label: 'Vendas',
+        href: `${basePath}/vendas`,
       },
       {
         leftSection: <IconWheat />,

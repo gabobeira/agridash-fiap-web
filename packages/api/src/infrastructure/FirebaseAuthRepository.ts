@@ -1,3 +1,14 @@
+// Função utilitária para ler o cookie de sessão
+function getSessionToken(): string | null {
+  if (typeof document === 'undefined') return null;
+  return (
+    document.cookie
+      .split('; ')
+      .find(row => row.startsWith('session_token='))
+      ?.split('=')[1] || null
+  );
+}
+
 import { FirebaseApp, getApps, initializeApp } from 'firebase/app';
 import {
   createUserWithEmailAndPassword,
@@ -8,10 +19,10 @@ import {
   updateProfile,
   User,
 } from 'firebase/auth';
-import { AuthService } from '../domain/AuthService';
+import { AuthRepository } from '../domain/AuthRepository';
 import { AuthUser } from '../domain/AuthUser';
 
-export class FirebaseAuthService implements AuthService {
+export class FirebaseAuthRepository implements AuthRepository {
   private readonly app: FirebaseApp | null;
   private readonly auth;
   private currentUserCache: AuthUser | null = null;
@@ -27,7 +38,9 @@ export class FirebaseAuthService implements AuthService {
 
     // Verifica se a configuração é válida
     if (!this.isValidConfig(firebaseConfig)) {
-      console.warn('Invalid Firebase configuration, Firebase will not be initialized');
+      console.warn(
+        'Invalid Firebase configuration, Firebase will not be initialized'
+      );
       this.app = null;
       this.auth = null;
       return;
@@ -57,12 +70,14 @@ export class FirebaseAuthService implements AuthService {
 
   private isValidConfig(config: unknown): boolean {
     const firebaseConfig = config as Record<string, unknown>;
-    return !!(firebaseConfig?.apiKey && 
-           firebaseConfig?.authDomain && 
-           firebaseConfig?.projectId &&
-           firebaseConfig.apiKey !== 'undefined' &&
-           firebaseConfig.authDomain !== 'undefined' &&
-           firebaseConfig.projectId !== 'undefined');
+    return !!(
+      firebaseConfig?.apiKey &&
+      firebaseConfig?.authDomain &&
+      firebaseConfig?.projectId &&
+      firebaseConfig.apiKey !== 'undefined' &&
+      firebaseConfig.authDomain !== 'undefined' &&
+      firebaseConfig.projectId !== 'undefined'
+    );
   }
 
   async signIn(email: string, password: string): Promise<AuthUser> {
