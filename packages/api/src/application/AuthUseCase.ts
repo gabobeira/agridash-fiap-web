@@ -1,12 +1,12 @@
-import { AuthRepository } from '../domain/AuthRepository';
+import { AuthService } from '../domain/AuthService';
 import { AuthUser } from '../domain/AuthUser';
-import { FirebaseAuthRepository } from '../infrastructure/FirebaseAuthRepository';
+import { FirebaseAuthService } from '../infrastructure/FirebaseAuthService';
 
 export class AuthUseCase {
-  constructor(private authRepository: AuthRepository) {}
+  constructor(private authService: AuthService) {}
 
   async signIn(email: string, password: string): Promise<AuthUser> {
-    return this.authRepository.signIn(email, password);
+    return this.authService.signIn(email, password);
   }
 
   async signUp(
@@ -14,25 +14,23 @@ export class AuthUseCase {
     password: string,
     displayName?: string
   ): Promise<AuthUser> {
-    return this.authRepository.signUp(email, password, displayName);
+    return this.authService.signUp(email, password, displayName);
   }
 
   async signOut(): Promise<void> {
-    return this.authRepository.signOut();
+    return this.authService.signOut();
   }
 
   getCurrentUser(): AuthUser | null {
-    return this.authRepository.getCurrentUser();
+    return this.authService.getCurrentUser();
   }
 
   async getCurrentUserAsync(): Promise<AuthUser | null> {
-    // Verifica se o FirebaseAuthRepository tem o método getCurrentUserAsync
-    if ('getCurrentUserAsync' in this.authRepository) {
-      return (
-        this.authRepository as FirebaseAuthRepository
-      ).getCurrentUserAsync();
+    // Verifica se o FirebaseAuthService tem o método getCurrentUserAsync
+    if ('getCurrentUserAsync' in this.authService) {
+      return (this.authService as FirebaseAuthService).getCurrentUserAsync();
     }
     // Fallback para getCurrentUser se não tiver o método async
-    return this.authRepository.getCurrentUser();
+    return this.authService.getCurrentUser();
   }
 }

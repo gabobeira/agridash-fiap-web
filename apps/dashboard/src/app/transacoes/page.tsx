@@ -1,37 +1,37 @@
 import { DashboardMain } from '@/components/DashboardMain';
 import { FTable } from '@repo/ui';
 
-export default function StockDashboard() {
+export default function TransactionsDashboard() {
   return (
     <DashboardMain
-      title="Estoque"
+      title="Transações"
       subtitle="Microfrontend independente com componentes compartilhados"
     >
       <FTable
-        title="Tabela de Estoque"
+        title="Tabela de Transações"
         headers={[
           { key: 'name', label: 'Nome' },
-          { key: 'quantity', label: 'Quantidade' },
-          { key: 'price', label: 'Preço' },
+          { key: 'email', label: 'Email' },
+          { key: 'age', label: 'Idade' },
         ]}
         data={[
           {
             id: '1',
-            name: 'Produto A',
-            quantity: 100,
-            price: 10.0,
+            name: 'João Silva',
+            email: 'joao@email.com',
+            age: 30,
           },
           {
             id: '2',
-            name: 'Produto B',
-            quantity: 200,
-            price: 20.0,
+            name: 'Maria Santos',
+            email: 'maria@email.com',
+            age: 25,
           },
           {
             id: '3',
-            name: 'Produto C',
-            quantity: 300,
-            price: 30.0,
+            name: 'Pedro Costa',
+            email: 'pedro@email.com',
+            age: 35,
           },
         ]}
       />

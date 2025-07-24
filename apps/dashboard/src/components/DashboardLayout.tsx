@@ -1,7 +1,7 @@
 'use client';
 
 import { useNavbarLinks } from '@/hooks/useNavbarLinks';
-import { getDefaultAuthService, useAuth } from '@agridash/api';
+import { getDefaultAuthService, useSignOut } from '@agridash/api';
 import {
   AppShell,
   Burger,
@@ -28,7 +28,7 @@ export default function DashboardLayout({
   const [mounted, setMounted] = useState(false);
 
   const authUseCase = getDefaultAuthService();
-  const { signOut, loading: signOutLoading } = useAuth(authUseCase);
+  const { signOut, loading: signOutLoading } = useSignOut(authUseCase);
 
   const navbarLinks = useNavbarLinks();
 
