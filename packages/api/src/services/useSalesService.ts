@@ -40,6 +40,8 @@ export function useSalesService() {
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : 'Erro desconhecido';
+        console.error('Error fetching sales data:', errorMessage);
+
         setError(err as Error);
         notifications.show({
           title: 'Erro ao carregar transações',

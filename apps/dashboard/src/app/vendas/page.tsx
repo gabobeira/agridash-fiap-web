@@ -11,13 +11,9 @@ export default function SalesDashboard() {
   const [activePage, setActivePage] = useState(1);
   const [appliedFilters, setAppliedFilters] = useState({});
 
-  const handleApplyFilters = (filters: SalesFilters) => {
-    setAppliedFilters({
-      productId: filters.productId,
-      cooperativeId: filters.cooperativeId,
-      startDate: filters.startDate ? new Date(filters.startDate) : undefined,
-      endDate: filters.endDate ? new Date(filters.endDate) : undefined,
-    });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleApplyFilters = (filters: any) => {
+    setAppliedFilters(filters);
     setActivePage(1);
   };
 

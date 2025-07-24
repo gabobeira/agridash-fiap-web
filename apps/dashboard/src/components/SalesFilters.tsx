@@ -1,6 +1,6 @@
 import { Button, Grid, GridCol, NativeSelect } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
-import { IconFilter } from '@tabler/icons-react';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 
 export type SalesFilters = {
@@ -14,7 +14,8 @@ export function SalesFilters({
   applyFilters,
   appliedFilters = {},
 }: Readonly<{
-  applyFilters?: (filters: SalesFilters) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  applyFilters?: (filters: any) => void;
   appliedFilters?: SalesFilters;
 }>) {
   const [product, setProduct] = useState<string>(
@@ -30,34 +31,51 @@ export function SalesFilters({
     appliedFilters.endDate || null
   );
 
-  const handleFilter = () => {
+  const handleApplyFilters = () => {
     applyFilters?.({
-      productId: product,
-      cooperativeId: cooperative,
-      startDate,
-      endDate,
+      productId: product === 'Selecione' ? undefined : product,
+      cooperativeId: cooperative === 'Selecione' ? undefined : cooperative,
+      startDate: startDate
+        ? new Date(dayjs(startDate).toISOString())
+        : undefined,
+      endDate: endDate ? new Date(dayjs(endDate).toISOString()) : undefined,
     });
   };
 
+  const handleClearFilters = () => {
+    setProduct('');
+    setCooperative('');
+    setStartDate(null);
+    setEndDate(null);
+  };
+
+  /* 
+  Corrigir firebase para liberar o uso de filtros.
+  Error fetching sales data: The query requires an index. 
+  You can create it here: https://console.firebase.google.com/v1/r/project/control-farm-web-fiap/fire…18QARoNCgljb29wZXJhZG8QARoLCgdwcm9kdXRvEAEaCAoEZGF0YRABGgwKCF9fbmFtZV9fEAE
+  */
+
   return (
     <Grid mb="xl" align="flex-end">
-      <GridCol span={{ base: 12, md: 3 }}>
+      <GridCol span={{ base: 12, sm: 6, lg: 2 }}>
         <NativeSelect
           value={product}
           onChange={event => setProduct(event.currentTarget.value)}
           label="Produto"
           data={['Selecione', 'Trigo', 'Milho', 'Soja', 'Feijão', 'Arroz']}
+          disabled
         />
       </GridCol>
-      <GridCol span={{ base: 12, md: 3 }}>
+      <GridCol span={{ base: 12, sm: 6, lg: 2 }}>
         <NativeSelect
           value={cooperative}
           onChange={event => setCooperative(event.currentTarget.value)}
           label="Cooperado"
           data={['Selecione', 'Cooperado A', 'Cooperado B', 'Cooperado C']}
+          disabled
         />
       </GridCol>
-      <GridCol span={{ base: 12, md: 2 }}>
+      <GridCol span={{ base: 12, sm: 6, lg: 2 }}>
         <DateInput
           value={startDate}
           onChange={setStartDate}
@@ -65,7 +83,7 @@ export function SalesFilters({
           placeholder="Data de início"
         />
       </GridCol>
-      <GridCol span={{ base: 12, md: 2 }}>
+      <GridCol span={{ base: 12, sm: 6, lg: 2 }}>
         <DateInput
           value={endDate}
           onChange={setEndDate}
@@ -73,14 +91,14 @@ export function SalesFilters({
           placeholder="Data de término"
         />
       </GridCol>
-      <GridCol span={{ base: 12, md: 2 }}>
-        <Button
-          leftSection={<IconFilter size={16} />}
-          w="100%"
-          variant="outline"
-          onClick={handleFilter}
-        >
+      <GridCol span={{ base: 12, sm: 6, lg: 2 }}>
+        <Button w="100%" onClick={handleApplyFilters}>
           Filtrar
+        </Button>
+      </GridCol>
+      <GridCol span={{ base: 12, sm: 6, lg: 2 }}>
+        <Button w="100%" variant="outline" onClick={handleClearFilters}>
+          Limpar
         </Button>
       </GridCol>
     </Grid>

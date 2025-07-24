@@ -55,13 +55,6 @@ export class FirebaseSaleRepository implements SaleRepository {
     totalPages?: number;
     totalCount?: number;
   }> {
-    console.log('Fetching sales with params:', {
-      startDate,
-      endDate,
-      productId,
-      cooperativeId,
-    });
-
     const constraints = [];
 
     if (startDate) constraints.push(where('data', '>=', startDate));
