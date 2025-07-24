@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Table, Text } from '@mantine/core';
+import { Card, Center, Table, Text } from '@mantine/core';
 
 export interface FTableHeader {
   key: string;
@@ -54,18 +54,24 @@ export default function FTable({
           {title}
         </Text>
       )}
-      <Table striped={striped} highlightOnHover={highlightOnHover}>
-        <Table.Thead>
-          <Table.Tr>
-            {headers.map(header => (
-              <Table.Th key={header.key} style={{ width: header.width }}>
-                {header.label}
-              </Table.Th>
-            ))}
-          </Table.Tr>
-        </Table.Thead>
-        <Table.Tbody>{rows}</Table.Tbody>
-      </Table>
+      {data.length ? (
+        <Table striped={striped} highlightOnHover={highlightOnHover}>
+          <Table.Thead>
+            <Table.Tr>
+              {headers.map(header => (
+                <Table.Th key={header.key} style={{ width: header.width }}>
+                  {header.label}
+                </Table.Th>
+              ))}
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>{rows}</Table.Tbody>
+        </Table>
+      ) : (
+        <Center w="100%" h={200} bg="neutral.0">
+          <Text c="neutral.4">Não há dados para exibir!</Text>
+        </Center>
+      )}
     </Card>
   );
 }

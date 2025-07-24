@@ -2,7 +2,7 @@
 
 import { AuthLayout } from '@/components/AuthLayout';
 import { PublicAuthGuard } from '@/components/PublicAuthGuard';
-import { getDefaultAuthService, useSignIn } from '@agridash/api';
+import { getDefaultAuthService, useAuth } from '@agridash/api';
 import {
   Anchor,
   Button,
@@ -16,7 +16,7 @@ import { useState } from 'react';
 
 const LoginForm = () => {
   const authUseCase = getDefaultAuthService();
-  const { signIn, loading, error } = useSignIn(authUseCase);
+  const { signIn, loading, error } = useAuth(authUseCase);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
