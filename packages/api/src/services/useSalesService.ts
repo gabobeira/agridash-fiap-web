@@ -3,6 +3,14 @@
 import { notifications } from '@mantine/notifications';
 import { useCallback, useState } from 'react';
 import {
+  CooperativeGroupData,
+  GetSalesGroupByCooperativeUseCase,
+} from '../application/GetSalesGroupByCooperativeUseCase';
+import {
+  GetSalesGroupByProductUseCase,
+  ProductGroupData,
+} from '../application/GetSalesGroupByProductUseCase';
+import {
   GetSalesTableDataRequest,
   GetSalesTableDataUseCase,
   SaleData,
@@ -19,6 +27,10 @@ export function useSalesService() {
   const [hasMore, setHasMore] = useState(true);
   const [totalPages, setTotalPages] = useState<number | undefined>();
   const [totalCount, setTotalCount] = useState<number | undefined>();
+  const [chartData, setChartData] = useState<{
+    cooperativeGroups: CooperativeGroupData[];
+    productGroups: ProductGroupData[];
+  } | null>(null);
 
   const getSalesData = useCallback(
     async (requestParams: GetSalesTableDataRequest) => {
@@ -55,11 +67,57 @@ export function useSalesService() {
     []
   );
 
+  const getSalesChartData = useCallback(
+    async (startDate?: Date, endDate?: Date) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const saleRepository = new FirebaseSaleRepository(firebaseConfig);
+        const getSalesGroupByCooperativeUseCase =
+          new GetSalesGroupByCooperativeUseCase(saleRepository);
+        const getSalesGroupByProductUseCase = new GetSalesGroupByProductUseCase(
+          saleRepository
+        );
+        const response = await getSalesGroupByCooperativeUseCase.execute({
+          startDate,
+          endDate,
+        });
+        const productResponse = await getSalesGroupByProductUseCase.execute({
+          startDate,
+          endDate,
+        });
+        setChartData({
+          cooperativeGroups: response.cooperativeGroups,
+          productGroups: productResponse.productGroups,
+        });
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Erro desconhecido';
+        console.error(
+          'Error fetching sales group by cooperative data:',
+          errorMessage
+        );
+
+        setError(err as Error);
+        notifications.show({
+          title: 'Erro ao carregar dados',
+          message: errorMessage,
+          color: 'red',
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
   return {
     salesData,
+    getSalesData,
+    chartData,
+    getSalesChartData,
     loading,
     error,
-    getSalesData,
     currentPage,
     hasMore,
     totalPages,

@@ -44,7 +44,7 @@ export class GetSalesTableDataUseCase {
     requestParams: GetSalesTableDataRequest
   ): Promise<GetSalesTableDataResponse> {
     const { sales, lastDoc, hasMore, currentPage, totalPages, totalCount } =
-      await this.saleRepository.getSales(requestParams);
+      await this.saleRepository.getSalesPaginated(requestParams);
     const products = await this.stockRepository.getStockProducts();
 
     const salesData: SaleData[] = sales.map(sale => {

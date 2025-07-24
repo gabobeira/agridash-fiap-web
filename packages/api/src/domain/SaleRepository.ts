@@ -2,7 +2,7 @@ import { DocumentSnapshot } from 'firebase/firestore';
 import { Sale } from './Sale';
 
 export interface SaleRepository {
-  getSales({
+  getSalesPaginated({
     startDate,
     endDate,
     productId,
@@ -26,4 +26,12 @@ export interface SaleRepository {
     totalPages?: number;
     totalCount?: number;
   }>;
+
+  getSales({
+    startDate,
+    endDate,
+  }: {
+    startDate?: Date;
+    endDate?: Date;
+  }): Promise<Sale[]>;
 }
