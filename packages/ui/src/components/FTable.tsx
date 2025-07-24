@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Center, Table, Text } from '@mantine/core';
+import { Card, Center, Flex, Pagination, Table, Text } from '@mantine/core';
 
 export interface FTableHeader {
   key: string;
@@ -22,6 +22,10 @@ export interface FTableProps {
     value: unknown,
     row: Record<string, unknown>
   ) => React.ReactNode;
+  activePage?: number;
+  onChangePage?: (page: number) => void;
+  totalPages?: number;
+  paginate?: boolean;
 }
 
 export default function FTable({
@@ -34,6 +38,10 @@ export default function FTable({
   radius = 'md',
   shadow = 'sm',
   renderCell,
+  activePage = 1,
+  onChangePage = () => {},
+  totalPages = 1,
+  paginate = false,
 }: Readonly<FTableProps>) {
   const rows = data.map((row, index) => (
     <Table.Tr key={(row.id as string) || `row-${index}`}>
@@ -48,30 +56,48 @@ export default function FTable({
   ));
 
   return (
-    <Card shadow={shadow} padding="lg" radius={radius} withBorder={withBorder}>
-      {title && (
-        <Text fw={500} size="lg" mb="md">
-          {title}
-        </Text>
+    <>
+      <Card
+        shadow={shadow}
+        padding="lg"
+        radius={radius}
+        withBorder={withBorder}
+      >
+        {title && (
+          <Text fw={500} size="lg" mb="md">
+            {title}
+          </Text>
+        )}
+        {data.length ? (
+          <Table striped={striped} highlightOnHover={highlightOnHover}>
+            <Table.Thead>
+              <Table.Tr>
+                {headers.map(header => (
+                  <Table.Th key={header.key} style={{ width: header.width }}>
+                    {header.label}
+                  </Table.Th>
+                ))}
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+        ) : (
+          <Center w="100%" h={100} bg="neutral.0" bdrs="md">
+            <Text c="neutral.4" size="sm">
+              Não há dados para exibir!
+            </Text>
+          </Center>
+        )}
+      </Card>
+      {paginate && (
+        <Flex justify="flex-end" mt="md">
+          <Pagination
+            total={totalPages}
+            value={activePage}
+            onChange={onChangePage}
+          />
+        </Flex>
       )}
-      {data.length ? (
-        <Table striped={striped} highlightOnHover={highlightOnHover}>
-          <Table.Thead>
-            <Table.Tr>
-              {headers.map(header => (
-                <Table.Th key={header.key} style={{ width: header.width }}>
-                  {header.label}
-                </Table.Th>
-              ))}
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
-      ) : (
-        <Center w="100%" h={200} bg="neutral.0">
-          <Text c="neutral.4">Não há dados para exibir!</Text>
-        </Center>
-      )}
-    </Card>
+    </>
   );
 }
