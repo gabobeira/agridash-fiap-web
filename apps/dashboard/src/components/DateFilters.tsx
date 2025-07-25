@@ -3,18 +3,18 @@ import { DateInput } from '@mantine/dates';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
-export type SalesFilters = {
+export type DateFilters = {
   startDate?: Date | string | null;
   endDate?: Date | string | null;
 };
 
-export function SalesFilters({
+export function DateFilters({
   applyFilters,
   appliedFilters = {},
 }: Readonly<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   applyFilters?: (filters: any) => void;
-  appliedFilters?: SalesFilters;
+  appliedFilters?: DateFilters;
 }>) {
   const [startDate, setStartDate] = useState<Date | string | null>(
     appliedFilters.startDate || null

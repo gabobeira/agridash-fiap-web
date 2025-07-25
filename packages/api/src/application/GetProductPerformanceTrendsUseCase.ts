@@ -38,12 +38,6 @@ export class GetProductPerformanceTrendsUseCase {
   ): Promise<GetProductPerformanceTrendsResponse> {
     const { startDate, endDate, productIds } = requestParams;
 
-    console.log('GetProductPerformanceTrendsUseCase - Params:', {
-      startDate,
-      endDate,
-      productIds,
-    });
-
     // Buscar vendas do período
     const sales = await this.saleRepository.getSales({
       startDate,
@@ -52,9 +46,6 @@ export class GetProductPerformanceTrendsUseCase {
 
     // Buscar produtos para calcular custos
     const products = await this.stockRepository.getStockProducts();
-
-    console.log('Sales found:', sales.length);
-    console.log('Products found:', products.length);
 
     // Filtrar por produtos específicos se fornecido
     const filteredSales =
@@ -147,12 +138,6 @@ export class GetProductPerformanceTrendsUseCase {
         endDate: endDate?.toISOString().split('T')[0] ?? '',
       },
     };
-
-    console.log('GetProductPerformanceTrendsUseCase - Result:', {
-      trendsCount: result.trends.length,
-      productsCount: result.products.length,
-      totalDays: result.totalDays,
-    });
 
     return result;
   }

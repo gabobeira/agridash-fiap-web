@@ -50,12 +50,6 @@ export class GetCooperativeProductMixUseCase {
   ): Promise<GetCooperativeProductMixResponse> {
     const { startDate, endDate, cooperativeIds } = requestParams;
 
-    console.log('GetCooperativeProductMixUseCase - Params:', {
-      startDate,
-      endDate,
-      cooperativeIds,
-    });
-
     // Buscar vendas do período
     const sales = await this.saleRepository.getSales({
       startDate,
@@ -64,9 +58,6 @@ export class GetCooperativeProductMixUseCase {
 
     // Buscar produtos para calcular custos
     const products = await this.stockRepository.getStockProducts();
-
-    console.log('Sales found:', sales.length);
-    console.log('Products found:', products.length);
 
     // Filtrar por cooperados específicos se fornecido
     const filteredSales =
@@ -240,13 +231,6 @@ export class GetCooperativeProductMixUseCase {
         totalInteractions: cooperativeProductMatrix.length,
       },
     };
-
-    console.log('GetCooperativeProductMixUseCase - Result:', {
-      matrixSize: result.cooperativeProductMatrix.length,
-      cooperativesCount: result.cooperatives.length,
-      productsCount: result.products.length,
-      insights: result.insights,
-    });
 
     return result;
   }

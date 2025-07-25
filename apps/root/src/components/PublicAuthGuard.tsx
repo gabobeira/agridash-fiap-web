@@ -11,7 +11,7 @@ interface PublicAuthGuardProps {
 
 export function PublicAuthGuard({
   children,
-  dashboardUrl = '/dashboard',
+  dashboardUrl,
 }: Readonly<PublicAuthGuardProps>) {
   const [isUnauthenticated, setIsUnauthenticated] = useState<boolean | null>(
     null
@@ -19,6 +19,14 @@ export function PublicAuthGuard({
   const { user, loading } = useAuthStore();
 
   useEffect(() => {
+    const getDashboardUrl = () => {
+      if (dashboardUrl) return dashboardUrl;
+
+      // Em uma arquitetura multizone, o dashboard é servido através de rewrite
+      // Usa URL relativa para aproveitar o rewrite configurado
+      return '/dashboard';
+    };
+
     const checkAuth = async () => {
       try {
         // Aguarda a inicialização do Firebase antes de verificar
@@ -27,7 +35,18 @@ export function PublicAuthGuard({
         }
 
         if (user) {
-          window.location.href = dashboardUrl;
+          // Verifica se já não está no dashboard para evitar loops
+          const currentPath = window.location.pathname;
+
+          // Se já está no dashboard (através de rewrite), não redireciona
+          if (currentPath.startsWith('/dashboard')) {
+            setIsUnauthenticated(false);
+            return;
+          }
+
+          // Redireciona para o dashboard usando URL relativa (rewrite)
+          const targetDashboardUrl = getDashboardUrl();
+          window.location.href = targetDashboardUrl;
           return;
         }
 

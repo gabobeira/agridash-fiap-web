@@ -1,58 +1,23 @@
-import { BarChart, BarChartSeries } from '@mantine/charts';
-import { Center, Text } from '@mantine/core';
+import { BarChart, BarChartProps, BarChartSeries } from '@mantine/charts';
 
 import '@mantine/charts/styles.css';
+import { FEmptyData } from './FEmptyData';
 
-type FBarChartProps = {
+type FBarChartProps = BarChartProps & {
   data: Record<string, string | number>[];
   series: BarChartSeries[];
   dataKey: string;
-  height?: number;
-  orientation?: 'vertical' | 'horizontal';
-  xAxisLabel?: string;
-  yAxisLabel?: string;
-  withLegend?: boolean;
-  withTooltip?: boolean;
-  withYAxis?: boolean;
-  withXAxis?: boolean;
-  valueFormatter?: (value: number) => string;
 };
 
 export default function FBarChart({
   data,
   series,
   dataKey,
-  height = 300,
-  orientation = 'vertical',
-  xAxisLabel,
-  yAxisLabel,
-  withLegend = true,
-  withTooltip = true,
-  withYAxis = true,
-  withXAxis = true,
-  valueFormatter,
+  ...otherProps
 }: FBarChartProps) {
   return data && data.length > 0 ? (
-    <BarChart
-      h={height}
-      data={data}
-      dataKey={dataKey}
-      series={series}
-      orientation={orientation}
-      xAxisLabel={xAxisLabel}
-      yAxisLabel={yAxisLabel}
-      withLegend={withLegend}
-      withTooltip={withTooltip}
-      withYAxis={withYAxis}
-      withXAxis={withXAxis}
-      valueFormatter={valueFormatter}
-      tickLine="y"
-    />
+    <BarChart data={data} dataKey={dataKey} series={series} {...otherProps} />
   ) : (
-    <Center w="100%" h={100} bg="neutral.0" bdrs="md">
-      <Text c="neutral.4" size="sm">
-        Não há dados para exibir!
-      </Text>
-    </Center>
+    <FEmptyData />
   );
 }
