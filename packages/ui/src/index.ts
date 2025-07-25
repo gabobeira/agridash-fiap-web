@@ -25,4 +25,6 @@ export { default as FAreaChart } from './components/FAreaChart';
 
 export { default as FBarChart } from './components/FBarChart';
 
+export { default as FScatterChart } from './components/FScatterChart';
+
 export { default as FCard } from './components/FCard';

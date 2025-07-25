@@ -3,6 +3,18 @@
 import { notifications } from '@mantine/notifications';
 import { useCallback, useState } from 'react';
 import {
+  CooperativeProfitByDay,
+  GetCooperativeProfitByDayUseCase,
+} from '../application/GetCooperativeProfitByDayUseCase';
+import {
+  FinancialIndicators,
+  GetFinancialIndicatorsUseCase,
+} from '../application/GetFinancialIndicatorsUseCase';
+import {
+  GetProductVolumeVsProfitMarginUseCase,
+  ProductVolumeVsProfitMargin,
+} from '../application/GetProductVolumeVsProfitMarginUseCase';
+import {
   CooperativeGroupData,
   GetSalesGroupByCooperativeUseCase,
 } from '../application/GetSalesGroupByCooperativeUseCase';
@@ -30,7 +42,11 @@ export function useSalesService() {
   const [chartData, setChartData] = useState<{
     cooperativeGroups: CooperativeGroupData[];
     productGroups: ProductGroupData[];
+    cooperativeProfitByDay: CooperativeProfitByDay[];
+    productVolumeVsProfitMargin: ProductVolumeVsProfitMargin[];
   } | null>(null);
+  const [financialIndicators, setFinancialIndicators] =
+    useState<FinancialIndicators | null>(null);
 
   const getSalesData = useCallback(
     async (requestParams: GetSalesTableDataRequest) => {
@@ -73,11 +89,20 @@ export function useSalesService() {
       setError(null);
       try {
         const saleRepository = new FirebaseSaleRepository(firebaseConfig);
+        const stockRepository = new FirebaseStockRepository(firebaseConfig);
         const getSalesGroupByCooperativeUseCase =
           new GetSalesGroupByCooperativeUseCase(saleRepository);
         const getSalesGroupByProductUseCase = new GetSalesGroupByProductUseCase(
           saleRepository
         );
+        const getCooperativeProfitByDayUseCase =
+          new GetCooperativeProfitByDayUseCase(saleRepository, stockRepository);
+        const getProductVolumeVsProfitMarginUseCase =
+          new GetProductVolumeVsProfitMarginUseCase(
+            saleRepository,
+            stockRepository
+          );
+
         const response = await getSalesGroupByCooperativeUseCase.execute({
           startDate,
           endDate,
@@ -86,9 +111,23 @@ export function useSalesService() {
           startDate,
           endDate,
         });
+        const profitByDayResponse =
+          await getCooperativeProfitByDayUseCase.execute({
+            startDate:
+              startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // Default: últimos 30 dias
+            endDate: endDate || new Date(),
+          });
+        const volumeVsProfitMarginResponse =
+          await getProductVolumeVsProfitMarginUseCase.execute({
+            startDate,
+            endDate,
+          });
+
         setChartData({
           cooperativeGroups: response.cooperativeGroups,
           productGroups: productResponse.productGroups,
+          cooperativeProfitByDay: profitByDayResponse.profitByDay,
+          productVolumeVsProfitMargin: volumeVsProfitMarginResponse.products,
         });
       } catch (err) {
         const errorMessage =
@@ -111,11 +150,51 @@ export function useSalesService() {
     []
   );
 
+  const getFinancialIndicators = useCallback(
+    async (startDate?: Date, endDate?: Date) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const saleRepository = new FirebaseSaleRepository(firebaseConfig);
+        const stockRepository = new FirebaseStockRepository(firebaseConfig);
+        const getFinancialIndicatorsUseCase = new GetFinancialIndicatorsUseCase(
+          saleRepository,
+          stockRepository
+        );
+
+        const response = await getFinancialIndicatorsUseCase.execute({
+          startDate,
+          endDate,
+        });
+
+        setFinancialIndicators(response.indicators);
+        return response.indicators;
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : 'Erro desconhecido';
+        console.error('Error fetching financial indicators:', errorMessage);
+
+        setError(err as Error);
+        notifications.show({
+          title: 'Erro ao carregar indicadores financeiros',
+          message: errorMessage,
+          color: 'red',
+        });
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
   return {
     salesData,
     getSalesData,
     chartData,
     getSalesChartData,
+    financialIndicators,
+    getFinancialIndicators,
     loading,
     error,
     currentPage,

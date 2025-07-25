@@ -1,20 +1,18 @@
-import { AreaChart } from '@mantine/charts';
+import { AreaChart, AreaChartSeries } from '@mantine/charts';
+import { Center, Text } from '@mantine/core';
 
 import '@mantine/charts/styles.css';
 
-export default function FAreaChart({
-  data,
-  series,
-  dataKey,
-}: Readonly<{ data: any; series: any; dataKey: string }>) {
+type FAreaChartProps = {
+  data: Record<string, unknown>[];
+  series: AreaChartSeries[];
+  dataKey: string;
+};
+
+export default function FAreaChart({ data, series, dataKey }: FAreaChartProps) {
   console.log('FAreaChart data:', data);
 
-  // Verificação de segurança
-  if (!data || !Array.isArray(data) || data.length === 0) {
-    return <div>Nenhum dado disponível para exibir</div>;
-  }
-
-  return (
+  return data && data.length > 0 ? (
     <AreaChart
       h={300}
       data={data}
@@ -22,5 +20,11 @@ export default function FAreaChart({
       series={series}
       curveType="linear"
     />
+  ) : (
+    <Center w="100%" h={100} bg="neutral.0" bdrs="md">
+      <Text c="neutral.4" size="sm">
+        Não há dados para exibir!
+      </Text>
+    </Center>
   );
 }

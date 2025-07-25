@@ -15,7 +15,11 @@ export default function FCard({
     <Card p="lg" withBorder {...customProps}>
       <Stack>
         {title && <Title order={4}>{title}</Title>}
-        {subtitle && <Text mb="xl">{subtitle}</Text>}
+        {subtitle && (
+          <Text mb="xl" size="xs" c="neutral.5">
+            {subtitle}
+          </Text>
+        )}
         {children}
       </Stack>
     </Card>
