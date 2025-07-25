@@ -2,9 +2,8 @@
 
 import { DashboardMain } from '@/components/DashboardMain';
 import { useStockService } from '@agridash/api';
-import { Badge, Button } from '@mantine/core';
+import { Badge } from '@mantine/core';
 import { FLoadingOverlay, FTable } from '@repo/ui';
-import { IconBellRinging } from '@tabler/icons-react';
 import { useEffect } from 'react';
 
 export default function StockDashboard() {
@@ -19,23 +18,6 @@ export default function StockDashboard() {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
-
-  const handleNotification = (productId: string) => {
-    alert(`Enviando notificação para o produto ${productId}`);
-  };
-
-  const renderNotificationButton = (productId: string, enabled: boolean) => (
-    <Button
-      onClick={() => handleNotification(productId)}
-      rightSection={<IconBellRinging size={14} />}
-      variant="outline"
-      size="xs"
-      disabled={!enabled}
-      color="red.5"
-    >
-      Notificar
-    </Button>
-  );
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -68,7 +50,6 @@ export default function StockDashboard() {
     quantidadeEstoque: product.quantidadeEstoque,
     capacidadeEstoque: product.capacidadeEstoque,
     statusEstoque: renderStatusBadge(product.statusEstoque.toUpperCase()),
-    action: renderNotificationButton(product.idProduto, product.alertaEstoque),
   }));
 
   if (loading) {
@@ -78,7 +59,7 @@ export default function StockDashboard() {
   return (
     <DashboardMain
       title="Estoque"
-      subtitle="Microfrontend independente com componentes compartilhados"
+      subtitle="Gerenciamento e monitoramento de inventário de produtos"
     >
       <FTable
         title="Tabela de Estoque"
@@ -90,8 +71,7 @@ export default function StockDashboard() {
           { label: 'Valor Venda (un.)', key: 'valorUnitarioVenda' },
           { label: 'Quantidade Estoque', key: 'quantidadeEstoque' },
           { label: 'Capacidade Estoque', key: 'capacidadeEstoque' },
-          { label: 'Status', key: 'statusEstoque' },
-          { label: 'Ação', key: 'action' },
+          { label: 'Status', key: 'statusEstoque', width: '100px' },
         ]}
         data={stockProductsTableData}
       />

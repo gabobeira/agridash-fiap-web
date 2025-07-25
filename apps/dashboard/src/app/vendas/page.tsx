@@ -47,7 +47,7 @@ export default function SalesDashboard() {
   return (
     <DashboardMain
       title="Vendas"
-      subtitle="Microfrontend independente com componentes compartilhados"
+      subtitle="Controle e análise de vendas dos produtos cooperados"
     >
       <SalesFilters
         applyFilters={handleApplyFilters}

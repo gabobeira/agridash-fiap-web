@@ -29,11 +29,9 @@ export class FirebaseSaleRepository implements SaleRepository {
     this.collectionRef = collection(this.db, 'vendas');
   }
 
-  async getSales({
+  async getSalesPaginated({
     startDate,
     endDate,
-    productId,
-    cooperativeId,
     pageSize = 10,
     page = 1,
     lastDoc,
@@ -41,8 +39,6 @@ export class FirebaseSaleRepository implements SaleRepository {
   }: {
     startDate?: Date;
     endDate?: Date;
-    productId?: string;
-    cooperativeId?: string;
     pageSize?: number;
     page?: number;
     lastDoc?: DocumentSnapshot;
@@ -59,9 +55,6 @@ export class FirebaseSaleRepository implements SaleRepository {
 
     if (startDate) constraints.push(where('data', '>=', startDate));
     if (endDate) constraints.push(where('data', '<=', endDate));
-    if (productId) constraints.push(where('produto', '==', productId));
-    if (cooperativeId)
-      constraints.push(where('cooperado', '==', cooperativeId));
 
     let totalCount: number | undefined;
     let totalPages: number | undefined;
@@ -123,5 +116,37 @@ export class FirebaseSaleRepository implements SaleRepository {
       totalPages,
       totalCount,
     };
+  }
+
+  async getSales({
+    startDate,
+    endDate,
+  }: {
+    startDate?: Date;
+    endDate?: Date;
+  }): Promise<Sale[]> {
+    const constraints = [];
+
+    if (startDate) constraints.push(where('data', '>=', startDate));
+    if (endDate) constraints.push(where('data', '<=', endDate));
+
+    const queryRef = query(
+      this.collectionRef,
+      ...constraints,
+      orderBy('data', 'desc')
+    );
+
+    const snapshot = await getDocs(queryRef);
+
+    return snapshot.docs.map(doc => {
+      const data = doc.data();
+      return new Sale({
+        cooperado: data.cooperado,
+        data: data.data?.toDate?.() || new Date(),
+        produto: data.produto,
+        quantidadeProduto: data.quantidade,
+        valorVenda: data.valor,
+      });
+    });
   }
 }

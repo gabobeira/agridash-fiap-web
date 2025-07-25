@@ -5,8 +5,6 @@ import { StockRepository } from '../domain/StockRepository';
 export interface GetSalesTableDataRequest {
   startDate?: Date;
   endDate?: Date;
-  productId?: string;
-  cooperativeId?: string;
   pageSize?: number;
   page?: number;
   lastDoc?: DocumentSnapshot;
@@ -44,7 +42,7 @@ export class GetSalesTableDataUseCase {
     requestParams: GetSalesTableDataRequest
   ): Promise<GetSalesTableDataResponse> {
     const { sales, lastDoc, hasMore, currentPage, totalPages, totalCount } =
-      await this.saleRepository.getSales(requestParams);
+      await this.saleRepository.getSalesPaginated(requestParams);
     const products = await this.stockRepository.getStockProducts();
 
     const salesData: SaleData[] = sales.map(sale => {

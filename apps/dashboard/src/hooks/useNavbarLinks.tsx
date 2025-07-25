@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  IconBell,
-  IconCoins,
-  IconHomeStats,
-  IconWheat,
-} from '@tabler/icons-react';
+import { IconCoins, IconHomeStats, IconWheat } from '@tabler/icons-react';
 import { useMemo } from 'react';
 import { useStandaloneMode } from './useStandaloneMode';
 
@@ -30,11 +25,6 @@ export function useNavbarLinks() {
         leftSection: <IconWheat />,
         label: 'Estoque',
         href: `${basePath}/estoque`,
-      },
-      {
-        leftSection: <IconBell />,
-        label: 'Notificações',
-        href: `${basePath}/notificacoes`,
       },
     ];
   }, [isStandalone]);
