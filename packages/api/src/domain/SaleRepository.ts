@@ -5,16 +5,12 @@ export interface SaleRepository {
   getSalesPaginated({
     startDate,
     endDate,
-    productId,
-    cooperativeId,
     pageSize,
     lastDoc,
     includeCount,
   }: {
     startDate?: Date;
     endDate?: Date;
-    productId?: string;
-    cooperativeId?: string;
     pageSize?: number;
     lastDoc?: DocumentSnapshot;
     includeCount?: boolean;

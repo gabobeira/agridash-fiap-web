@@ -5,8 +5,6 @@ import { StockRepository } from '../domain/StockRepository';
 export interface GetSalesTableDataRequest {
   startDate?: Date;
   endDate?: Date;
-  productId?: string;
-  cooperativeId?: string;
   pageSize?: number;
   page?: number;
   lastDoc?: DocumentSnapshot;

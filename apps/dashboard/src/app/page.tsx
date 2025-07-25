@@ -1,16 +1,12 @@
 'use client';
 
 import { DashboardMain } from '@/components/DashboardMain';
+import { SalesFilters } from '@/components/SalesFilters';
 import { useSalesService } from '@agridash/api';
+import { BarChart, LineChart } from '@mantine/charts';
 import { Grid, GridCol, Text } from '@mantine/core';
-import {
-  FAreaChart,
-  FBarChart,
-  FCard,
-  FLoadingOverlay,
-  FScatterChart,
-} from '@repo/ui';
-import { useEffect } from 'react';
+import { FAreaChart, FCard, FLoadingOverlay, FScatterChart } from '@repo/ui';
+import { useEffect, useState } from 'react';
 
 export default function HomeDashboard() {
   const {
@@ -21,18 +17,27 @@ export default function HomeDashboard() {
     loading,
   } = useSalesService();
   const {
-    cooperativeGroups,
-    productGroups,
     cooperativeProfitByDay,
     productVolumeVsProfitMargin,
+    productPerformanceTrends,
+    cooperativeProductMix,
   } = chartData || {};
 
-  useEffect(() => {
-    getSalesChartData();
-    getFinancialIndicators();
-  }, [getSalesChartData, getFinancialIndicators]);
+  const [appliedFilters, setAppliedFilters] = useState({
+    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+    endDate: new Date(),
+  });
 
-  // Função para formatar valores monetários
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleApplyFilters = (filters: any) => {
+    setAppliedFilters(filters);
+  };
+
+  useEffect(() => {
+    getSalesChartData(appliedFilters.startDate, appliedFilters.endDate);
+    getFinancialIndicators(appliedFilters.startDate, appliedFilters.endDate);
+  }, [getSalesChartData, getFinancialIndicators, appliedFilters]);
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
@@ -40,27 +45,22 @@ export default function HomeDashboard() {
     }).format(value);
   };
 
-  // Função para formatar percentuais
   const formatPercentage = (value: number) => {
     return `${value.toFixed(2)}%`;
   };
 
-  // Função para formatar números
   const formatNumber = (value: number) => {
     return new Intl.NumberFormat('pt-BR').format(value);
   };
 
-  // Transformar dados de lucro por cooperado por dia para o formato do gráfico
   const transformProfitData = () => {
     if (!cooperativeProfitByDay || cooperativeProfitByDay.length === 0)
       return [];
 
-    // Obter lista de cooperados
     const cooperatives = Object.keys(
       cooperativeProfitByDay[0]?.cooperativeProfit || {}
     );
 
-    // Transformar dados para formato de gráfico de área
     return cooperativeProfitByDay.map(dayData => {
       const transformed: Record<string, string | number> = {
         date: dayData.date,
@@ -72,7 +72,6 @@ export default function HomeDashboard() {
     });
   };
 
-  // Gerar série de dados para o gráfico
   const generateProfitSeries = () => {
     if (!cooperativeProfitByDay || cooperativeProfitByDay.length === 0)
       return [];
@@ -96,6 +95,61 @@ export default function HomeDashboard() {
     }));
   };
 
+  const transformProductTrendsData = () => {
+    if (!productPerformanceTrends || productPerformanceTrends.length === 0)
+      return [];
+
+    const dataByDate = productPerformanceTrends.reduce(
+      (acc, trend) => {
+        if (!acc[trend.date]) {
+          acc[trend.date] = { date: trend.date };
+        }
+        acc[trend.date][trend.produto] = trend.receitaDiaria;
+        return acc;
+      },
+      {} as Record<string, Record<string, string | number>>
+    );
+
+    return Object.values(dataByDate);
+  };
+
+  const generateProductTrendsSeries = () => {
+    if (!productPerformanceTrends || productPerformanceTrends.length === 0)
+      return [];
+
+    const products = [...new Set(productPerformanceTrends.map(t => t.produto))];
+    const colors = [
+      'blue',
+      'green',
+      'orange',
+      'red',
+      'purple',
+      'cyan',
+      'yellow',
+    ];
+
+    return products.map((produto, index) => ({
+      name: produto,
+      color: colors[index % colors.length],
+    }));
+  };
+
+  const transformCooperativeProductData = () => {
+    if (!cooperativeProductMix || cooperativeProductMix.length === 0) return [];
+
+    const sortedInteractions = cooperativeProductMix.toSorted(
+      (a, b) => b.receitaGerada - a.receitaGerada
+    );
+    const topInteractions = sortedInteractions.slice(0, 10);
+
+    return topInteractions.map(item => ({
+      interaction: `${item.cooperado} - ${item.produto}`,
+      receita: item.receitaGerada,
+      lucro: item.lucroPorProduto,
+      quantidade: item.quantidadeVendida,
+    }));
+  };
+
   if (loading) {
     return <FLoadingOverlay />;
   }
@@ -105,8 +159,11 @@ export default function HomeDashboard() {
       title="Visão geral"
       subtitle="Microfrontend independente com componentes compartilhados"
     >
+      <SalesFilters
+        applyFilters={handleApplyFilters}
+        appliedFilters={appliedFilters}
+      />
       <Grid justify="space-between" align="stretch" mb="xl">
-        {/* Cards de Indicadores Financeiros */}
         <GridCol span={{ base: 12, md: 3 }}>
           <FCard title="Receita Total" customProps={{ h: '100%' }}>
             <Text size="xl" fw="bold" c="#28a745">
@@ -242,8 +299,35 @@ export default function HomeDashboard() {
           </FCard>
         </GridCol>
 
-        {/* Gráficos Existentes */}
-        <GridCol span={{ base: 12, md: 6 }}>
+        <GridCol span={{ base: 12 }}>
+          <FCard
+            title="Top 10 Interações Cooperado x Produto"
+            subtitle="Maiores receitas por combinação cooperado-produto."
+            customProps={{ h: '100%' }}
+          >
+            {cooperativeProductMix && cooperativeProductMix.length > 0 ? (
+              <BarChart
+                h={300}
+                data={transformCooperativeProductData()}
+                dataKey="interaction"
+                series={[
+                  { name: 'receita', color: 'blue', label: 'Receita' },
+                  { name: 'lucro', color: 'green', label: 'Lucro' },
+                ]}
+                tickLine="xy"
+                withLegend
+                legendProps={{ verticalAlign: 'top', height: 50 }}
+                valueFormatter={(value: number) => formatCurrency(value)}
+              />
+            ) : (
+              <Text ta="center" c="dimmed" mt="xl">
+                Nenhum dado de matriz disponível
+              </Text>
+            )}
+          </FCard>
+        </GridCol>
+
+        <GridCol span={{ base: 12 }}>
           <FCard
             title="Lucro por Cooperado ao Longo do Tempo"
             subtitle="Evolução diária do lucro de cada cooperado no período."
@@ -281,45 +365,26 @@ export default function HomeDashboard() {
 
         <GridCol span={{ base: 12, md: 6 }}>
           <FCard
-            title="Total de Vendas por Cooperado"
-            subtitle="Visualização do valor total de vendas por cooperado."
+            title="Performance de Produtos ao Longo do Tempo"
+            subtitle="Evolução da receita diária por produto no período."
             customProps={{ h: '100%' }}
           >
-            {cooperativeGroups && cooperativeGroups.length > 0 ? (
-              <FBarChart
-                data={cooperativeGroups}
-                series={[
-                  {
-                    name: 'totalVendas',
-                    label: 'Faturamento no período',
-                    color: 'green',
-                  },
-                ]}
-                dataKey="cooperado"
+            {productPerformanceTrends && productPerformanceTrends.length > 0 ? (
+              <LineChart
+                h={300}
+                data={transformProductTrendsData()}
+                dataKey="date"
+                series={generateProductTrendsSeries()}
+                curveType="linear"
+                strokeWidth={2}
+                withLegend
+                legendProps={{ verticalAlign: 'top', height: 50 }}
               />
-            ) : null}
-          </FCard>
-        </GridCol>
-
-        <GridCol span={{ base: 12, md: 6 }}>
-          <FCard
-            title="Quantidade Vendida por Produto"
-            subtitle="Visualização da quantidade total vendida por produto."
-            customProps={{ h: '100%' }}
-          >
-            {productGroups && productGroups.length > 0 ? (
-              <FBarChart
-                data={productGroups}
-                series={[
-                  {
-                    name: 'quantidadeTotalVendida',
-                    label: 'Quantidade',
-                    color: 'blue',
-                  },
-                ]}
-                dataKey="produto"
-              />
-            ) : null}
+            ) : (
+              <Text ta="center" c="dimmed" mt="xl">
+                Nenhum dado de performance disponível
+              </Text>
+            )}
           </FCard>
         </GridCol>
       </Grid>

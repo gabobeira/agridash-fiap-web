@@ -32,8 +32,6 @@ export class FirebaseSaleRepository implements SaleRepository {
   async getSalesPaginated({
     startDate,
     endDate,
-    productId,
-    cooperativeId,
     pageSize = 10,
     page = 1,
     lastDoc,
@@ -41,8 +39,6 @@ export class FirebaseSaleRepository implements SaleRepository {
   }: {
     startDate?: Date;
     endDate?: Date;
-    productId?: string;
-    cooperativeId?: string;
     pageSize?: number;
     page?: number;
     lastDoc?: DocumentSnapshot;
@@ -59,9 +55,6 @@ export class FirebaseSaleRepository implements SaleRepository {
 
     if (startDate) constraints.push(where('data', '>=', startDate));
     if (endDate) constraints.push(where('data', '<=', endDate));
-    if (productId) constraints.push(where('produto', '==', productId));
-    if (cooperativeId)
-      constraints.push(where('cooperado', '==', cooperativeId));
 
     let totalCount: number | undefined;
     let totalPages: number | undefined;

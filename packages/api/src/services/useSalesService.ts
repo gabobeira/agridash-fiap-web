@@ -3,6 +3,10 @@
 import { notifications } from '@mantine/notifications';
 import { useCallback, useState } from 'react';
 import {
+  CooperativeProductMix,
+  GetCooperativeProductMixUseCase,
+} from '../application/GetCooperativeProductMixUseCase';
+import {
   CooperativeProfitByDay,
   GetCooperativeProfitByDayUseCase,
 } from '../application/GetCooperativeProfitByDayUseCase';
@@ -10,6 +14,10 @@ import {
   FinancialIndicators,
   GetFinancialIndicatorsUseCase,
 } from '../application/GetFinancialIndicatorsUseCase';
+import {
+  GetProductPerformanceTrendsUseCase,
+  ProductPerformanceTrend,
+} from '../application/GetProductPerformanceTrendsUseCase';
 import {
   GetProductVolumeVsProfitMarginUseCase,
   ProductVolumeVsProfitMargin,
@@ -44,6 +52,8 @@ export function useSalesService() {
     productGroups: ProductGroupData[];
     cooperativeProfitByDay: CooperativeProfitByDay[];
     productVolumeVsProfitMargin: ProductVolumeVsProfitMargin[];
+    productPerformanceTrends: ProductPerformanceTrend[];
+    cooperativeProductMix: CooperativeProductMix[];
   } | null>(null);
   const [financialIndicators, setFinancialIndicators] =
     useState<FinancialIndicators | null>(null);
@@ -102,6 +112,13 @@ export function useSalesService() {
             saleRepository,
             stockRepository
           );
+        const getProductPerformanceTrendsUseCase =
+          new GetProductPerformanceTrendsUseCase(
+            saleRepository,
+            stockRepository
+          );
+        const getCooperativeProductMixUseCase =
+          new GetCooperativeProductMixUseCase(saleRepository, stockRepository);
 
         const response = await getSalesGroupByCooperativeUseCase.execute({
           startDate,
@@ -122,12 +139,25 @@ export function useSalesService() {
             startDate,
             endDate,
           });
+        const productPerformanceTrendsResponse =
+          await getProductPerformanceTrendsUseCase.execute({
+            startDate,
+            endDate,
+          });
+        const cooperativeProductMixResponse =
+          await getCooperativeProductMixUseCase.execute({
+            startDate,
+            endDate,
+          });
 
         setChartData({
           cooperativeGroups: response.cooperativeGroups,
           productGroups: productResponse.productGroups,
           cooperativeProfitByDay: profitByDayResponse.profitByDay,
           productVolumeVsProfitMargin: volumeVsProfitMarginResponse.products,
+          productPerformanceTrends: productPerformanceTrendsResponse.trends,
+          cooperativeProductMix:
+            cooperativeProductMixResponse.cooperativeProductMatrix,
         });
       } catch (err) {
         const errorMessage =
