@@ -157,7 +157,7 @@ export default function HomeDashboard() {
   return (
     <DashboardMain
       title="Visão geral"
-      subtitle="Microfrontend independente com componentes compartilhados"
+      subtitle="Análise de dados e indicadores financeiros da cooperativa agrícola"
     >
       <SalesFilters
         applyFilters={handleApplyFilters}

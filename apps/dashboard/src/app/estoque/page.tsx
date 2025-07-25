@@ -59,7 +59,7 @@ export default function StockDashboard() {
   return (
     <DashboardMain
       title="Estoque"
-      subtitle="Microfrontend independente com componentes compartilhados"
+      subtitle="Gerenciamento e monitoramento de inventário de produtos"
     >
       <FTable
         title="Tabela de Estoque"
