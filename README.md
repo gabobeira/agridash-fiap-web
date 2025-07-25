@@ -1,208 +1,172 @@
-# AgriDash FIAP - Plataforma de Gestão Agrícola
+# 🌾 AgriDash - Sistema de Gestão de Cooperativas Agrícolas
 
-Uma plataforma moderna de gestão agrícola construída com arquitetura de microfrontends usando Next.js, TypeScript e Mantine UI.
+Sistema de gestão para cooperativas agrícolas desenvolvido com **arquitetura microfrontend**, **TypeScript**, **Clean Architecture** e **gerenciamento de estado global**, como projeto FIAP.
 
-## 🌱 Visão Geral
+Vídeo explicativo: https://youtu.be/9F0-2f7MNPw
 
-O AgriDash é uma solução completa para monitoramento e gestão de dados agrícolas, desenvolvida como projeto para a FIAP. A plataforma utiliza uma arquitetura de microfrontends para garantir escalabilidade, manutenibilidade e desenvolvimento independente de funcionalidades.
+## 🏗️ Arquitetura Microfrontend
 
-## 🏗️ Arquitetura
+O projeto implementa uma arquitetura microfrontend utilizando **Turborepo** como sistema de monorepo, permitindo desenvolvimento independente e deploy separado das aplicações:
 
-### Microfrontends
+### Aplicações Independentes
 
-- **Root App** (`:3000`) - Portal principal e navegação
-- **Dashboard** (`:3001`) - Painel de controle e métricas
+- **Root App** (`apps/root`): Aplicação de autenticação e onboarding
+- **Dashboard App** (`apps/dashboard`): Painel de controle e analytics
 
-### Pacotes Compartilhados
+### Packages Compartilhados
 
-- **`@repo/ui`** - Biblioteca de componentes com Mantine UI
-- **`@repo/eslint-config`** - Configurações ESLint compartilhadas
-- **`@repo/tailwind-config`** - Configurações Tailwind CSS
-- **`@repo/typescript-config`** - Configurações TypeScript
-
-## 🚀 Tecnologias
-
-- **Framework**: Next.js 15.4.2 com Turbopack
-- **Linguagem**: TypeScript 5.8.3
-- **UI Library**: Mantine UI 8.1.3
-- **Estilização**: Tailwind CSS 3.4.17
-- **Monorepo**: Turborepo
-- **Testes**: Jest + Testing Library
-- **Lint**: ESLint 9
-- **Icons**: Tabler Icons
-
-## 📦 Estrutura do Projeto
+- **API Package** (`packages/api`): Lógica de negócio centralizada
+- **UI Package** (`packages/ui`): Componentes reutilizáveis
+- **Configurações** (`packages/*-config`): Configurações compartilhadas
 
 ```
 agridash-fiap-web/
 ├── apps/
-│   ├── root/           # Portal principal (:3000)
-│   └── dashboard/      # Dashboard (:3001)
+│   ├── root/          # App: Autenticação (porta 3000)
+│   └── dashboard/     # App: Dashboard (porta 3001)
 ├── packages/
-│   ├── ui/             # Componentes compartilhados
-│   ├── eslint-config/  # ESLint config
-│   ├── tailwind-config/# Tailwind config
-│   └── typescript-config/ # TypeScript config
-├── package.json        # Configuração principal
-└── turbo.json         # Configuração Turborepo
+│   ├── api/           # Clean Architecture + State Management
+│   ├── ui/            # Componentes compartilhados
+│   └── *-config/      # Configurações (ESLint, Tailwind, TS)
 ```
 
-## 🔧 Instalação e Execução
+## 🔧 TypeScript (Next.js)
 
-### Pré-requisitos
+- **Next.js 15** com **TypeScript 5.8** para type safety completo
+- **React 19** com tipagem estrita
+- Configurações TypeScript compartilhadas via `packages/typescript-config`
+- Type safety em todas as camadas da aplicação
 
-- Node.js 18+
-- npm 8+
+## 🏛️ Clean Architecture
 
-### Instalação
+Implementação da Clean Architecture no package `packages/api`:
+
+### Domain Layer (Entidades)
+
+```typescript
+// packages/api/src/domain/
+├── Sale.ts          # Entidade de domínio
+├── Stock.ts         # Entidade de domínio
+├── SaleRepository.ts    # Interface do repositório
+└── StockRepository.ts   # Interface do repositório
+```
+
+### Application Layer (Use Cases)
+
+```typescript
+// packages/api/src/application/
+├── GetFinancialIndicatorsUseCase.ts
+├── GetSalesTableDataUseCase.ts
+├── GetStockTableDataUseCase.ts
+└── ... # Outros use cases
+```
+
+### Infrastructure Layer (Repositórios)
+
+```typescript
+// packages/api/src/infrastructure/
+├── FirebaseSaleRepository.ts   # Implementação Firebase
+└── FirebaseStockRepository.ts  # Implementação Firebase
+```
+
+## 🌐 Gerenciamento de Estado Global
+
+### Zustand Store
+
+- **AuthStore** (`packages/api/src/auth/AuthStore.ts`): Estado de autenticação global
+- State compartilhado entre todas as aplicações microfrontend
+- Gerenciamento reativo de autenticação com Firebase
+
+### Hooks Customizados
+
+- **useAuth**: Hook para consumo do estado de autenticação
+- **useSalesService**: Gerenciamento de estado de vendas
+- **useStockService**: Gerenciamento de estado de estoque
+
+## 📋 Pré-requisitos
+
+- **Node.js** >= 18.0.0
+- **npm** >= 10.8.2
+- **Conta Firebase** configurada
+
+## 🚀 Instalação e Configuração
+
+### 1. Clone e instale dependências
 
 ```bash
-# Clone o repositório
 git clone https://github.com/gabobeira/agridash-fiap-web.git
 cd agridash-fiap-web
-
-# Instale as dependências
 npm install
 ```
 
-### Desenvolvimento
+### 2. Configure Firebase
+
+Crie `.env.local` na raiz com:
+
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+DASHBOARD_URL=http://localhost:3001
+```
+
+## 🎯 Desenvolvimento
+
+### Executar todas as aplicações
 
 ```bash
-# Executa todos os microfrontends simultaneamente
 npm run dev
-
-# URLs disponíveis:
-# - Root App: http://localhost:3000
-# - Dashboard: http://localhost:3001
 ```
 
-### Scripts Disponíveis
+- **Root App**: http://localhost:3000 (Autenticação)
+- **Dashboard**: http://localhost:3001 (Painel)
+
+### Executar aplicações específicas
 
 ```bash
-npm run dev        # Desenvolvimento (todos os apps)
-npm run build      # Build para produção
-npm run lint       # Linting de todos os pacotes
-npm run test       # Executa testes
-npm run test:watch # Testes em modo watch
+npm run dev:root      # Apenas autenticação
+npm run dev:dashboard # Apenas dashboard
 ```
 
-## 🎨 Componentes UI
+### Build e validação
 
-A biblioteca `@repo/ui` oferece:
+```bash
+npm run build     # Build de produção
+npm run lint      # Linting
+npm run validate  # Lint + verificação de tipos
+```
 
-### Componentes Base (Mantine Wrappers)
+## 🎛️ Funcionalidades Implementadas
 
-- **Card** - Cards responsivos com shadow e border
-- **Input** - Campos de entrada baseados em TextInput
-- **Button** - Botões com variações e cores
+### Autenticação (Root App)
 
-### Componentes de Domínio (AgriDash Específicos)
+- Login/cadastro com Firebase Auth
+- Proteção de rotas
+- Estado global de autenticação
 
-- **SensorCard** - Cards para exibição de dados de sensores
-- **WeatherWidget** - Widget meteorológico com dados em tempo real
-- **DataTable** - Tabela avançada com ações CRUD
+### Dashboard Analytics
 
-### Providers
-
-- **MantineProvider** - Configuração global do Mantine UI
-
-## 🌾 Funcionalidades Agrícolas
-
-### Monitoramento de Sensores
-
-- Temperatura, umidade e pH do solo
-- Status em tempo real (normal, warning, critical)
-- Localização e identificação de sensores
-
-### Dashboard Meteorológico
-
-- Condições climáticas atuais
-- Temperatura, umidade e velocidade do vento
-- Interface visual intuitiva
+- **KPIs Financeiros**: Receita, despesa, lucro, margem
+- **Métricas Operacionais**: Ticket médio, produtos vendidos
+- **Visualizações**: Top produtos, evolução do lucro, performance
 
 ### Gestão de Dados
 
-- Tabelas interativas com histórico
-- Ações de visualizar, editar e excluir
-- Filtros e ordenação de dados
-
-## 🧪 Testes
-
-```bash
-# Executar todos os testes
-npm run test
-
-# Testes em modo watch
-npm run test:watch
-
-# Testes com coverage
-npm run test -- --coverage
-```
-
-## 📚 Documentação de Desenvolvimento
-
-### Adicionando Novo Microfrontend
-
-1. Criar pasta em `apps/`
-2. Configurar `package.json` com dependência `@repo/ui`
-3. Adicionar script de dev na porta específica
-4. Atualizar `turbo.json`
-
-### Criando Componentes UI
-
-```typescript
-// packages/ui/src/components/domain/MeuComponente.tsx
-'use client';
-
-import { Card, Text } from '@mantine/core';
-
-export interface MeuComponenteProps {
-  readonly title: string;
-}
-
-export default function MeuComponente({ title }: MeuComponenteProps) {
-  return (
-    <Card>
-      <Text>{title}</Text>
-    </Card>
-  );
-}
-```
-
-### Importando Componentes
-
-```typescript
-// Em qualquer app
-import { Card, SensorCard, MantineProvider } from '@repo/ui';
-```
+- **Vendas**: Listagem paginada com filtros por data
+- **Estoque**: Controle de inventário e status
 
 ## 🚀 Deploy
 
-O projeto está configurado para deploy em Vercel:
+### Vercel (Recomendado)
 
-```bash
-# Build de produção
-npm run build
-
-# O Vercel detecta automaticamente a configuração do monorepo
-```
-
-## 👥 Contribuição
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## 📄 Licença
-
-Este projeto é desenvolvido para fins educacionais como parte do curso da FIAP.
-
-## 🏫 FIAP
-
-Projeto desenvolvido como parte do curso de Tecnologia da FIAP.
+1. Fork o repositório
+2. Conecte com Vercel
+3. Configure variáveis de ambiente
+4. Deploy automático por branch
 
 ---
 
-**Desenvolvido com ❤️ para a comunidade agrícola**
+**Projeto FIAP** - Demonstração de arquitetura microfrontend com TypeScript, Clean Architecture e gerenciamento de estado global.
