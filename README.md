@@ -147,16 +147,24 @@ npm run validate  # Lint + verificação de tipos
 - Proteção de rotas
 - Estado global de autenticação
 
+![auth](.github/image2.png)
+
 ### Dashboard Analytics
 
 - **KPIs Financeiros**: Receita, despesa, lucro, margem
 - **Métricas Operacionais**: Ticket médio, produtos vendidos
 - **Visualizações**: Top produtos, evolução do lucro, performance
 
+![dash-1](.github/image3.png)
+![dash-2](.github/image4.png)
+
 ### Gestão de Dados
 
 - **Vendas**: Listagem paginada com filtros por data
 - **Estoque**: Controle de inventário e status
+
+![vendas](.github/image5.png)
+![estoque](.github/image6.png)
 
 ## 🚀 Deploy
 
