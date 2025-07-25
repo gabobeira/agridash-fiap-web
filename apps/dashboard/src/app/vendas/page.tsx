@@ -1,7 +1,7 @@
 'use client';
 
 import { DashboardMain } from '@/components/DashboardMain';
-import { SalesFilters } from '@/components/SalesFilters';
+import { DateFilters } from '@/components/DateFilters';
 import { useSalesService } from '@agridash/api';
 import { FLoadingOverlay, FTable } from '@repo/ui';
 import { useEffect, useState } from 'react';
@@ -49,7 +49,7 @@ export default function SalesDashboard() {
       title="Vendas"
       subtitle="Controle e análise de vendas dos produtos cooperados"
     >
-      <SalesFilters
+      <DateFilters
         applyFilters={handleApplyFilters}
         appliedFilters={appliedFilters}
       />

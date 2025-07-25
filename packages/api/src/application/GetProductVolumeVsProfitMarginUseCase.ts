@@ -66,9 +66,6 @@ export class GetProductVolumeVsProfitMarginUseCase {
         ? sales.filter(sale => productIds.includes(sale.produto))
         : sales;
 
-    console.log('Filtered sales:', filteredSales.length);
-    console.log('Stock products:', stockProducts.length);
-
     // Agrupar vendas por produto de forma mais simples
     const productSalesMap = new Map<
       string,
@@ -106,8 +103,6 @@ export class GetProductVolumeVsProfitMarginUseCase {
       });
     });
 
-    console.log('Product sales map:', productSalesMap.size);
-
     // Converter para array e calcular margem de lucro
     const productsData: ProductVolumeVsProfitMargin[] = Array.from(
       productSalesMap.entries()
@@ -129,8 +124,6 @@ export class GetProductVolumeVsProfitMarginUseCase {
         categoria: 'Baixo Volume, Baixa Margem', // Será calculado depois
       };
     });
-
-    console.log('Products data before categorization:', productsData.length);
 
     // Se não há dados, retornar estrutura vazia
     if (productsData.length === 0) {
@@ -166,8 +159,6 @@ export class GetProductVolumeVsProfitMarginUseCase {
 
     const medianVolume = volumes.length > 0 ? this.calculateMedian(volumes) : 0;
     const medianMargin = margins.length > 0 ? this.calculateMedian(margins) : 0;
-
-    console.log('Median volume:', medianVolume, 'Median margin:', medianMargin);
 
     // Classificar produtos em categorias
     const categoryDistribution = {
@@ -208,7 +199,6 @@ export class GetProductVolumeVsProfitMarginUseCase {
       },
     };
 
-    console.log('Final result:', result);
     return result;
   }
 

@@ -1,7 +1,7 @@
 import { ScatterChart, ScatterChartSeries } from '@mantine/charts';
-import { Center, Text } from '@mantine/core';
 
 import '@mantine/charts/styles.css';
+import { FEmptyData } from './FEmptyData';
 
 interface ScatterDataPoint {
   x: number;
@@ -24,9 +24,6 @@ export default function FScatterChart({
   xAxisKey,
   yAxisKey,
 }: FScatterChartProps) {
-  console.log('FScatterChart data:', data);
-
-  // Transformar dados para o formato esperado pelo ScatterChart
   const transformedData: ScatterChartSeries[] =
     data && data.length > 0
       ? [
@@ -59,10 +56,6 @@ export default function FScatterChart({
       yAxisLabel={yAxisKey || 'Eixo Y'}
     />
   ) : (
-    <Center w="100%" h={100} bg="neutral.0" bdrs="md">
-      <Text c="neutral.4" size="sm">
-        Não há dados para exibir!
-      </Text>
-    </Center>
+    <FEmptyData />
   );
 }

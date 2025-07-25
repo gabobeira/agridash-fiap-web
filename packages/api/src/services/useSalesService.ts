@@ -23,14 +23,6 @@ import {
   ProductVolumeVsProfitMargin,
 } from '../application/GetProductVolumeVsProfitMarginUseCase';
 import {
-  CooperativeGroupData,
-  GetSalesGroupByCooperativeUseCase,
-} from '../application/GetSalesGroupByCooperativeUseCase';
-import {
-  GetSalesGroupByProductUseCase,
-  ProductGroupData,
-} from '../application/GetSalesGroupByProductUseCase';
-import {
   GetSalesTableDataRequest,
   GetSalesTableDataUseCase,
   SaleData,
@@ -48,8 +40,6 @@ export function useSalesService() {
   const [totalPages, setTotalPages] = useState<number | undefined>();
   const [totalCount, setTotalCount] = useState<number | undefined>();
   const [chartData, setChartData] = useState<{
-    cooperativeGroups: CooperativeGroupData[];
-    productGroups: ProductGroupData[];
     cooperativeProfitByDay: CooperativeProfitByDay[];
     productVolumeVsProfitMargin: ProductVolumeVsProfitMargin[];
     productPerformanceTrends: ProductPerformanceTrend[];
@@ -100,11 +90,6 @@ export function useSalesService() {
       try {
         const saleRepository = new FirebaseSaleRepository(firebaseConfig);
         const stockRepository = new FirebaseStockRepository(firebaseConfig);
-        const getSalesGroupByCooperativeUseCase =
-          new GetSalesGroupByCooperativeUseCase(saleRepository);
-        const getSalesGroupByProductUseCase = new GetSalesGroupByProductUseCase(
-          saleRepository
-        );
         const getCooperativeProfitByDayUseCase =
           new GetCooperativeProfitByDayUseCase(saleRepository, stockRepository);
         const getProductVolumeVsProfitMarginUseCase =
@@ -120,14 +105,6 @@ export function useSalesService() {
         const getCooperativeProductMixUseCase =
           new GetCooperativeProductMixUseCase(saleRepository, stockRepository);
 
-        const response = await getSalesGroupByCooperativeUseCase.execute({
-          startDate,
-          endDate,
-        });
-        const productResponse = await getSalesGroupByProductUseCase.execute({
-          startDate,
-          endDate,
-        });
         const profitByDayResponse =
           await getCooperativeProfitByDayUseCase.execute({
             startDate:
@@ -151,8 +128,6 @@ export function useSalesService() {
           });
 
         setChartData({
-          cooperativeGroups: response.cooperativeGroups,
-          productGroups: productResponse.productGroups,
           cooperativeProfitByDay: profitByDayResponse.profitByDay,
           productVolumeVsProfitMargin: volumeVsProfitMarginResponse.products,
           productPerformanceTrends: productPerformanceTrendsResponse.trends,

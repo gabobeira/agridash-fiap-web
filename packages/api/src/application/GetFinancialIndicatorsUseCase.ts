@@ -44,8 +44,6 @@ export class GetFinancialIndicatorsUseCase {
     // Buscar produtos para calcular custos
     const stockProducts = await this.stockRepository.getStockProducts();
 
-    console.log(`Calculating financial indicators for ${sales.length} sales`);
-
     // Calcular totais
     let despesaTotal = 0;
     let receitaTotal = 0;
@@ -87,8 +85,6 @@ export class GetFinancialIndicatorsUseCase {
       ticketMedio: Math.round(ticketMedio * 100) / 100,
       totalTransacoes,
     };
-
-    console.log('Financial indicators calculated:', indicators);
 
     return {
       indicators,
