@@ -318,6 +318,7 @@ export default function HomeDashboard() {
                 withLegend
                 legendProps={{ verticalAlign: 'top', height: 50 }}
                 valueFormatter={(value: number) => formatCurrency(value)}
+                pl="xl"
               />
             ) : (
               <Text ta="center" c="dimmed" mt="xl">
